@@ -14,8 +14,8 @@ def calc_seat(input)
 end
 
 def position(lower, upper, steps)
-  ap("upper #{lower}, #{upper}, #{steps[0]}, #{steps[1..]}")
   return lower if steps.empty?
+
   mid = lower + ((upper - lower) / 2.0).ceil
   if %w[F L].include?(steps[0])
     position(lower, mid - 1, steps[1..])
@@ -30,5 +30,5 @@ def max_position(input)
   2**input.size - 1
 end
 
-seat = "FBFBBFFRLR"
-ap(calc_seat(seat))
+input = IO.readlines('input', chomp: true)
+ap(input.map{ calc_seat(_1) }.max)
