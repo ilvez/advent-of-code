@@ -1,6 +1,5 @@
 require 'amazing_print'
 
-
 def calc_seat(input)
   row_steps = input[..6]
   col_steps = input[7..]
@@ -25,7 +24,6 @@ def position(lower, upper, steps)
 end
 
 def find_seat(array)
-  ap(array)
   return array[0] + 1 if array.size == 1
 
   mid = array.size / 2
