@@ -5,12 +5,12 @@ OCCUPIED = '#'
 FREE = 'L'
 FLOOR = '.'
 
-def columns_count
-  @map.first.size
+def columns_count(map)
+  map.first.size
 end
 
-def rows_count
-  @map.size
+def rows_count(map)
+  map.size
 end
 
 def print_map(map)
@@ -32,9 +32,9 @@ end
 
 def occupied_around(map, row, column)
   (row - 1..row + 1).flat_map { |r|
-    next if r < 0 || r >= rows_count
+    next if r < 0 || r >= rows_count(map)
     (column - 1..column + 1).map { |c|
-      next if c < 0 || c >= columns_count
+      next if c < 0 || c >= columns_count(map)
       next if c == column && r == row
       occupied?(map, r, c)
     }
@@ -60,8 +60,8 @@ end
 
 def resolve_round(current_round)
   next_round = get_map_copy(current_round)
-  rows_count.times.each { |row|
-    columns_count.times.each { |column|
+  rows_count(current_round).times.each { |row|
+    columns_count(current_round).times.each { |column|
       if can_sit?(current_round, row, column)
         next_round[row][column] = OCCUPIED
       elsif must_leave?(current_round, row, column)
@@ -80,8 +80,7 @@ def import_map(file_name)
   map
 end
 
-@map = import_map('input')
-current_round = @map
+current_round = import_map('input')
 
 loop do
   previous_round = get_map_copy(current_round)
