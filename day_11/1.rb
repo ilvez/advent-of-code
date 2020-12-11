@@ -26,10 +26,6 @@ def free?(map, row, column)
   map[row][column] == FREE
 end
 
-def floor?(map, row, column)
-  map[row][column] == FLOOR
-end
-
 def occupied_around(map, row, column)
   (row - 1..row + 1).flat_map { |r|
     next if r < 0 || r >= rows_count(map)
@@ -50,7 +46,7 @@ def can_sit?(map, row, column)
 end
 
 def must_leave?(map, row, column)
-  !floor?(map, row, column) && occupied_around(map, row, column).select { true == _1 }.size >= 4
+  occupied?(map, row, column) && occupied_around(map, row, column).select { true == _1 }.size >= 4
 end
 
 
