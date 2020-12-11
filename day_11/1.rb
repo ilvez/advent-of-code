@@ -58,16 +58,20 @@ def get_map_copy(map)
   Marshal.load(Marshal.dump(map))
 end
 
+def resolve_seat(current_round, next_round, row, column)
+  if can_sit?(current_round, row, column)
+    next_round[row][column] = OCCUPIED
+  elsif must_leave?(current_round, row, column)
+    next_round[row][column] = FREE
+  end
+end
+
 def resolve_round(current_round)
   next_round = get_map_copy(current_round)
   rows_count(current_round).times.each { |row|
-    columns_count(current_round).times.each { |column|
-      if can_sit?(current_round, row, column)
-        next_round[row][column] = OCCUPIED
-      elsif must_leave?(current_round, row, column)
-        next_round[row][column] = FREE
-      end
-    }
+    columns_count(current_round).times.each do |column|
+      resolve_seat(current_round, next_round, row, column)
+    end
   }
   next_round
 end
