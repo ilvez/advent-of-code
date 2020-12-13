@@ -4,8 +4,8 @@ require 'pry'
 def parse_input(file_name)
   IO.readlines(file_name, chomp: true).map do |line|
     {
-      direction: line[0],
-      distance: line[1..].to_i
+      operation: line[0],
+      argument: line[1..].to_i
     }
   end
 end
@@ -19,30 +19,29 @@ class Boat
   L = 'L'
   F = 'F'
 
-  def initialize(location: 0, direction: E)
+  def initialize()
     @north_south_position = 0
     @east_west_position = 0
-    @direction = E
     @waypoint = Waypoint.new(1, 10)
   end
 
   def move(instruction)
-    direction = instruction[:direction]
-    distance = instruction[:distance]
-    case direction
+    operation = instruction[:operation]
+    argument = instruction[:argument]
+    case operation
     when F
-      n, e = @waypoint.forward(distance)
+      n, e = @waypoint.forward(argument)
       @north_south_position += n
       @east_west_position += e
     when N, E, S, W
-      @waypoint.move(direction, distance)
+      @waypoint.move(operation, argument)
     when R, L
-      @waypoint.rotate(direction, distance)
+      @waypoint.rotate(operation, argument)
     end
   end
 
   def to_s
-    "Boat(direction: #{@direction}, waypoint: #{@waypoint})"
+    "Boat(operation: #{@operation}, waypoint: #{@waypoint})"
   end
 
   def manhatten_distance
