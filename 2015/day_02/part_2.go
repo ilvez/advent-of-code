@@ -14,13 +14,9 @@ func main() {
   for _, size := range(sizes) {
     l, w, h := ParseLWH(size)
     a, b := TwoSmallestOfThree(l, w, h)
-    currentLength := 2 * a + 2 * b + Volume(l, w, h)
-    fmt.Println("  inputs:", l, w, h)
-    fmt.Println("  TwoSmallestOfThree:", a, b)
-    fmt.Println("  currentLength:", currentLength)
-    totalLength += int64(currentLength)
-    fmt.Println("Result:", totalLength)
+    totalLength += int64(2 * a + 2 * b + Volume(l, w, h))
   }
+  fmt.Println("Result:", totalLength)
 }
 
 func TwoSmallestOfThree(l int, w int, h int) (a int, b int) {
