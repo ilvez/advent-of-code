@@ -38,6 +38,7 @@ func ElementExists(coordinates []Coordinate, currentCoord Coordinate) bool {
   }
   return false
 }
+
 func NextCoordinate(direction byte, currentCoord Coordinate) (Coordinate) {
   switch direction {
   case '>': return Coordinate { currentCoord.x + 1, currentCoord.y }
