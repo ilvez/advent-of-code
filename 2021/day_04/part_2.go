@@ -10,13 +10,13 @@ func main() {
   inputs := FileToLines("input")
   bingoNumbers := BingoStringToNumbers(inputs[0])
 
-  bestBoardPosition := 99999
+  bestBoardPosition := 0
   winningResult := 0
 
   for i := 1; i <= NumberOfBoards(inputs); i++ {
     board := ParseBoard(inputs, i)
     position, result := SolveBoard(board, bingoNumbers)
-    if position < bestBoardPosition {
+    if position > bestBoardPosition {
       bestBoardPosition = position
       winningResult = result
     }
