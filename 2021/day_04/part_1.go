@@ -9,7 +9,25 @@ import "regexp"
 func main() {
   inputs := FileToLines("input2")
   bingoNumbers := BingoStringToNumbers(inputs[0])
-  fmt.Println("Result", bingoNumbers, BingoStringToNumbers(inputs[3]))
+
+  for i := 1; i <= NumberOfBoards(inputs); i++ {
+    fmt.Println(ParseBoard(inputs, i))
+  }
+
+  fmt.Println("Result", bingoNumbers)
+}
+
+func ParseBoard(inputs []string, boardNumber int) [][]int {
+  board := make([][]int, 0)
+  boardEndLine := boardNumber * 5 + boardNumber
+  for i := boardEndLine - 4; i <= boardEndLine; i++ {
+    board = append(board, BingoStringToNumbers(inputs[i]))
+  }
+  return board
+}
+
+func NumberOfBoards(inputs []string) int {
+  return (len(inputs) - 1) / 6
 }
 
 func BingoStringToNumbers(line string) []int {
