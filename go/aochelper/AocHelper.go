@@ -2,6 +2,12 @@ package aochelper
 
 import "os"
 import "bufio"
+import "strconv"
+
+func StringToInt(input string) int {
+  a, _ := strconv.Atoi(input)
+  return a
+}
 
 func FileToLines(filePath string) (lines []string) {
   file, err := os.Open(filePath)
