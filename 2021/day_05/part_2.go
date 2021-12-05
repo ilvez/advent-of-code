@@ -21,11 +21,12 @@ type Crossing struct {
 
 func main() {
   inputs := aoc.FileToLines("input")
-  positions := ParseInputPositions(inputs)
+  lineCoordinates := ParseInputPositions(inputs)
 
   crossings := make([]Crossing, 0)
-  for _, position := range positions {
-    for _, pos := range DrawLine(position) {
+  for _, position := range lineCoordinates {
+    line := DrawLine(position)
+    for _, pos := range line {
       i := FindCrossing(crossings, pos)
       if (i < 0) {
         crossings = append(crossings, Crossing { pos, 0 } )
@@ -52,28 +53,32 @@ func FindCrossing(crossings []Crossing, pos Pos) int {
 
 func DrawLine(coords LineCoordinates) Line {
   line := make(Line, 0)
-  if coords.start.x == coords.end.x {
-    for i:=0 ; i <= aoc.Abs(coords.start.y-coords.end.y); i++ {
-      y := findDirectionFunction(coords.start.y, coords.end.y)(coords.start.y, i)
-      line = append(line, Pos { coords.start.x, y })
+    var length int
+    if aoc.Abs(coords.start.x-coords.end.x) > aoc.Abs(coords.start.y-coords.end.y) {
+      length = aoc.Abs(coords.start.x-coords.end.x)
+    } else {
+      length = aoc.Abs(coords.start.y-coords.end.y)
     }
-  }
-  if coords.start.y == coords.end.y {
-    for i:=0 ; i <= aoc.Abs(coords.start.x-coords.end.x); i++ {
-      x := findDirectionFunction(coords.start.x, coords.end.x)(coords.start.x, i)
-      line = append(line, Pos { x, coords.start.y })
+    for i:=0 ; i <= length; i++ {
+      x := DirectionFunc(coords.start.x, coords.end.x)(coords.start.x, i)
+      y := DirectionFunc(coords.start.y, coords.end.y)(coords.start.y, i)
+      line = append(line, Pos { x, y })
     }
-  }
   return line
 }
 
-func findDirectionFunction(start, end int) func(int, int) int {
-  if start <= end { return Add }
+func DirectionFunc(start, end int) func(int, int) int {
+  if start < end {
+    return Add
+  } else if start == end {
+    return Noop
+  }
   return Sub
 }
 
 func Add(a, b int) int { return a + b }
 func Sub(a, b int) int { return a - b }
+func Noop(a, b int) int { return a }
 
 func ParseInputPositions(inputs []string) (positions []LineCoordinates) {
   positions = make([]LineCoordinates, 0)
