@@ -4,6 +4,10 @@ import "os"
 import "bufio"
 import "strconv"
 
+func Abs(x int) int {
+  if x < 0 { return -x }
+  return x
+}
 func StringToInt(input string) int {
   a, _ := strconv.Atoi(input)
   return a

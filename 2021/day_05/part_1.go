@@ -6,10 +6,16 @@ import "strings"
 
 func main() {
   inputs := aoc.FileToLines("input2")
+  fmt.Println(ParseInputPositions(inputs))
+}
+
+func ParseInputPositions(inputs []string) (positions [][]Pos) {
+  positions = make([][] Pos, 0)
   for _, input := range inputs {
     start, end := ParseLine(input)
-    fmt.Println("Result:", start, end)
+    positions = append(positions, []Pos { start, end })
   }
+  return
 }
 
 func ParseLine(line string) (Pos, Pos) {
