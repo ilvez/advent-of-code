@@ -23,32 +23,20 @@ func main() {
   inputs := aoc.FileToLines("input")
   lineCoordinates := ParseInputPositions(inputs)
 
-  crossings := make([]Crossing, 0)
+  crossings := make(map[Pos]int)
   for _, position := range lineCoordinates {
     line := DrawLine(position)
     for _, pos := range line {
-      i := FindCrossing(crossings, pos)
-      if (i < 0) {
-        crossings = append(crossings, Crossing { pos, 0 } )
-      } else {
-        crossings[i] = Crossing { crossings[i].pos, crossings[i].count + 1 }
-      }
+      crossings[pos] = crossings[pos] + 1
     }
   }
   result := 0
-  for _, crossing := range crossings {
-    if crossing.count > 0 {
+  for _, count := range crossings {
+    if count > 1 {
       result += 1
     }
   }
   fmt.Println("Result:", result)
-}
-
-func FindCrossing(crossings []Crossing, pos Pos) int {
-  for i, existingCrossing := range crossings {
-    if existingCrossing.pos == pos { return i }
-  }
-  return -1
 }
 
 func DrawLine(coords LineCoordinates) Line {
