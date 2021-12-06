@@ -9,33 +9,43 @@ func main() {
   inputString := aoc.FileToLines("input")
   state := InputToState(inputString[0])
 
-  fmt.Println("First state", state)
-  for i := 0; i < 80; i++ {
-    state = NewState(state)
+  for day := 1; day <= 256; day++ {
+    state = NewState(state, day)
   }
-  fmt.Println("Result", len(state))
+  fmt.Println("Result", FishCount(state))
 }
 
-func NewState(state []int) ([]int) {
-  newFishes := make([]int, 0)
-  for i, fish := range(state) {
-    if fish == 0 {
-      state[i] = 6
-      newFishes = append(newFishes, 8)
+func FishCount(state map[int]int) (fishCount int) {
+  fishCount = 0
+  for _, fishAmount := range state {
+    fishCount += fishAmount
+  }
+  return
+}
+
+func NewState(state map[int]int, day int) (map[int]int) {
+  newState := make(map[int]int, 0)
+  newbornAmount := 0
+  for fishAge, amount := range state {
+    if fishAge == 0 {
+      newState[6] += amount
+      newbornAmount = amount
     } else {
-      state[i] -= 1
+      newState[fishAge-1] += amount
     }
   }
-  newState := make([]int, 0)
-  newState = append(append([]int{}, state...), newFishes...)
+  if newbornAmount > 0 {
+    newState[8] = newbornAmount
+  }
   return newState
 }
 
-func InputToState(input string) []int {
+func InputToState(input string) map[int]int {
   stringArray := strings.Split(input, ",")
-  state := make([]int, len(stringArray))
-  for i, numString := range(stringArray) {
-    state[i] = aoc.StringToInt(numString)
+  state := make(map[int]int, len(stringArray))
+  for _, numString := range(stringArray) {
+    fishAge := aoc.StringToInt(numString)
+    state[fishAge] +=1
   }
   return state
 }
