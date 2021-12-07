@@ -7,42 +7,61 @@ import aoc "aocgo/aochelper"
 
 func main() {
   inputString := aoc.FileToLines("input")
-  crabLocations := aoc.StringToInt64Array(inputString[0])
-  fmt.Println("Part 1 result:", FindCheapestFuel(crabLocations, FindFuelPart1))
-  fmt.Println("Part 2 result:", FindCheapestFuel(crabLocations, FindFuelPart2))
+  locations := aoc.StringToInt64Array(inputString[0])
+  fmt.Println("Part 1 result:", FindCheapestFuel(locations, FindFuelPart1))
+  fmt.Println("Part 2 result:", FindCheapestFuel(locations, FindFuelPart2))
 }
 
-func FindCheapestFuel(crabLocations []int64, fuelFunc func([]int64, int64) int64) int64 {
+func FindCheapestFuel(locations []int64, fuelFunc func([]int64, int64) int64) int64 {
   var cheapestFuel int64 = math.MaxInt64 - 1
-  minLoc, maxLoc := findMinAndMax(crabLocations)
-  for i := minLoc; i <= maxLoc; i++ {
-    fuel := fuelFunc(crabLocations, i)
-    // fmt.Println(i, fuel)
-    if fuel < cheapestFuel {
-      cheapestFuel = fuel
+  min, max := FindMinMaxLocations(locations)
+  for min != max && min + 1 != max {
+    cen := (min + max) / 2
+    minVal, maxVal, cenVal := CalculateForBinarySearch(locations, min, max, cen, fuelFunc)
+    if minVal < cenVal && maxVal > cenVal {
+      max = cen
+      cheapestFuel = minVal
+    } else if minVal > cenVal && maxVal < cenVal {
+      min = cen
+      cheapestFuel = maxVal
+    } else if minVal > maxVal {
+      cheapestFuel = maxVal
+      min = cen
+    } else if minVal < maxVal {
+      cheapestFuel = minVal
+      max = cen
+    } else {
+      cheapestFuel = cenVal
+      min = cen
     }
+
+    if cheapestFuel > cenVal { cheapestFuel = cenVal }
   }
   return cheapestFuel
 }
 
-func FindFuelPart1(crabLocations []int64, goToLocation int64) (fuelAmount int64) {
+func CalculateForBinarySearch(locations []int64, min, max, cen int64, fuelFunc func([]int64, int64) int64) (int64, int64, int64) {
+  return fuelFunc(locations, min), fuelFunc(locations, max), fuelFunc(locations, cen)
+}
+
+func FindFuelPart1(locations []int64, goToLocation int64) (fuelAmount int64) {
   fuelAmount = 0
-  for _, location := range crabLocations {
+  for _, location := range locations {
     fuelAmount += aoc.AbsInt64(goToLocation - location)
   }
   return
 }
 
-func FindFuelPart2(crabLocations []int64, goToLocation int64) (fuelAmount int64) {
+func FindFuelPart2(locations []int64, goToLocation int64) (fuelAmount int64) {
   fuelAmount = 0
-  for _, location := range crabLocations {
+  for _, location := range locations {
     distance := aoc.AbsInt64(goToLocation - location)
     fuelAmount += (distance * (distance + 1)) / 2
   }
   return
 }
 
-func findMinAndMax(a []int64) (min, max int64) {
+func FindMinMaxLocations(a []int64) (min, max int64) {
   min = a[0]
   max = a[0]
   for _, value := range a {
