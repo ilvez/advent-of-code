@@ -3,11 +3,14 @@ package main
 import "fmt"
 import "math"
 import aoc "aocgo/aochelper"
+import "io/ioutil"
 
 
 func main() {
-  inputString := aoc.FileToLines("input")
-  locations := aoc.StringToInt64Array(inputString[0])
+  data, err := ioutil.ReadFile("7-1000000-2.in")
+  if err != nil { fmt.Println(err) }
+  locations := aoc.StringToInt64Array(string(data))
+  fmt.Println("Start calculations")
   fmt.Println("Part 1 result:", FindCheapestFuel(locations, FindFuelPart1))
   fmt.Println("Part 2 result:", FindCheapestFuel(locations, FindFuelPart2))
 }
