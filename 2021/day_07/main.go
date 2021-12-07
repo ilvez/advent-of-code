@@ -1,10 +1,12 @@
 package main
 
-import "fmt"
-import "math"
-import aoc "aocgo/aochelper"
-import "io/ioutil"
-import "os"
+import(
+  "fmt"
+  "io/ioutil"
+  "math"
+  "os"
+  aoc "aocgo/aochelper"
+)
 
 
 func main() {
