@@ -6,5 +6,6 @@ import aoc "aocgo/aochelper"
 
 func main() {
   inputString := aoc.FileToLines("input2")
-  fmt.Println(inputString)
+  inputArray := aoc.StringToIntArray(inputString[0])
+  fmt.Println(inputArray)
 }

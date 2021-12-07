@@ -3,6 +3,7 @@ package aochelper
 import "os"
 import "bufio"
 import "strconv"
+import "regexp"
 
 func Abs(x int) int {
   if x < 0 { return -x }
@@ -11,6 +12,15 @@ func Abs(x int) int {
 func StringToInt(input string) int {
   a, _ := strconv.Atoi(input)
   return a
+}
+
+func StringToIntArray(line string) []int {
+  outputs := make([]int, 0)
+  re := regexp.MustCompile(`\d+`)
+  for _, numberString := range re.FindAllString(line, -1) {
+    outputs = append(outputs, StringToInt(numberString))
+  }
+  return outputs
 }
 
 func FileToLines(filePath string) (lines []string) {
