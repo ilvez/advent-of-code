@@ -14,11 +14,6 @@ type Pos struct {
   x, y int
 }
 
-type Crossing struct {
-  pos Pos
-  count int
-}
-
 func main() {
   inputs := aoc.FileToLines("input")
   lineCoordinates := ParseInputPositions(inputs)
