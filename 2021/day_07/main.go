@@ -10,7 +10,6 @@ func main() {
   data, err := ioutil.ReadFile("7-1000000-2.in")
   if err != nil { fmt.Println(err) }
   locations := aoc.StringToInt64Array(string(data))
-  fmt.Println("Start calculations")
   fmt.Println("Part 1 result:", FindCheapestFuel(locations, FindFuelPart1))
   fmt.Println("Part 2 result:", FindCheapestFuel(locations, FindFuelPart2))
 }
@@ -21,21 +20,15 @@ func FindCheapestFuel(locations []int64, fuelFunc func([]int64, int64) int64) in
   for min != max && min + 1 != max {
     cen := (min + max) / 2
     minVal, maxVal, cenVal := CalculateForBinarySearch(locations, min, max, cen, fuelFunc)
-    if minVal < cenVal && maxVal > cenVal {
+    if minVal < cenVal && maxVal > cenVal || minVal < maxVal {
       max = cen
       cheapestFuel = minVal
-    } else if minVal > cenVal && maxVal < cenVal {
+    } else if minVal > cenVal && maxVal < cenVal || minVal > maxVal {
       min = cen
       cheapestFuel = maxVal
-    } else if minVal > maxVal {
-      cheapestFuel = maxVal
-      min = cen
-    } else if minVal < maxVal {
-      cheapestFuel = minVal
-      max = cen
     } else {
-      cheapestFuel = cenVal
       min = cen
+      cheapestFuel = cenVal
     }
 
     if cheapestFuel > cenVal { cheapestFuel = cenVal }
