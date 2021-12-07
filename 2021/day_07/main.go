@@ -8,7 +8,6 @@ import(
   aoc "aocgo/aochelper"
 )
 
-
 func main() {
   data, err := ioutil.ReadFile("7-1000000-2.in")
   if err != nil {
@@ -16,13 +15,13 @@ func main() {
     os.Exit(1)
   }
   locations := aoc.StringToInt64Array(string(data))
-  fmt.Println("Part 1 result:", FindCheapestFuel(locations, FindFuelPart1))
-  fmt.Println("Part 2 result:", FindCheapestFuel(locations, FindFuelPart2))
+  fmt.Println("Part 1 result:", findCheapestFuel(locations, findFuelPart1))
+  fmt.Println("Part 2 result:", findCheapestFuel(locations, findFuelPart2))
 }
 
-func FindCheapestFuel(locations []int64, fuelFunc func([]int64, int64) int64) int64 {
+func findCheapestFuel(locations []int64, fuelFunc func([]int64, int64) int64) int64 {
   var cheapestFuel int64 = math.MaxInt64 - 1
-  min, max := FindMinMaxLocations(locations)
+  min, max := findMinMaxLocations(locations)
   for min != max && min + 1 != max {
     cen := (min + max) / 2
 
@@ -46,7 +45,7 @@ func FindCheapestFuel(locations []int64, fuelFunc func([]int64, int64) int64) in
   return cheapestFuel
 }
 
-func FindFuelPart1(locations []int64, goToLocation int64) (fuelAmount int64) {
+func findFuelPart1(locations []int64, goToLocation int64) (fuelAmount int64) {
   fuelAmount = 0
   for _, location := range locations {
     fuelAmount += aoc.AbsInt64(goToLocation - location)
@@ -54,7 +53,7 @@ func FindFuelPart1(locations []int64, goToLocation int64) (fuelAmount int64) {
   return
 }
 
-func FindFuelPart2(locations []int64, goToLocation int64) (fuelAmount int64) {
+func findFuelPart2(locations []int64, goToLocation int64) (fuelAmount int64) {
   fuelAmount = 0
   for _, location := range locations {
     distance := aoc.AbsInt64(goToLocation - location)
@@ -63,7 +62,7 @@ func FindFuelPart2(locations []int64, goToLocation int64) (fuelAmount int64) {
   return
 }
 
-func FindMinMaxLocations(a []int64) (min, max int64) {
+func findMinMaxLocations(a []int64) (min, max int64) {
   min = a[0]
   max = a[0]
   for _, value := range a {
