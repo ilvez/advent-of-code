@@ -19,7 +19,11 @@ func FindCheapestFuel(locations []int64, fuelFunc func([]int64, int64) int64) in
   min, max := FindMinMaxLocations(locations)
   for min != max && min + 1 != max {
     cen := (min + max) / 2
-    minVal, maxVal, cenVal := CalculateForBinarySearch(locations, min, max, cen, fuelFunc)
+
+    minVal := fuelFunc(locations, min)
+    maxVal := fuelFunc(locations, max)
+    cenVal := fuelFunc(locations, cen)
+
     if minVal < cenVal && maxVal > cenVal || minVal < maxVal {
       max = cen
       cheapestFuel = minVal
@@ -34,10 +38,6 @@ func FindCheapestFuel(locations []int64, fuelFunc func([]int64, int64) int64) in
     if cheapestFuel > cenVal { cheapestFuel = cenVal }
   }
   return cheapestFuel
-}
-
-func CalculateForBinarySearch(locations []int64, min, max, cen int64, fuelFunc func([]int64, int64) int64) (int64, int64, int64) {
-  return fuelFunc(locations, min), fuelFunc(locations, max), fuelFunc(locations, cen)
 }
 
 func FindFuelPart1(locations []int64, goToLocation int64) (fuelAmount int64) {
