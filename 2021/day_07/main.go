@@ -4,11 +4,15 @@ import "fmt"
 import "math"
 import aoc "aocgo/aochelper"
 import "io/ioutil"
+import "os"
 
 
 func main() {
   data, err := ioutil.ReadFile("7-1000000-2.in")
-  if err != nil { fmt.Println(err) }
+  if err != nil {
+    fmt.Println(err)
+    os.Exit(1)
+  }
   locations := aoc.StringToInt64Array(string(data))
   fmt.Println("Part 1 result:", FindCheapestFuel(locations, FindFuelPart1))
   fmt.Println("Part 2 result:", FindCheapestFuel(locations, FindFuelPart2))
