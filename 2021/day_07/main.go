@@ -9,6 +9,7 @@ func main() {
   inputString := aoc.FileToLines("input")
   crabLocations := aoc.StringToInt64Array(inputString[0])
   fmt.Println("Part 1 result:", FindCheapestFuel(crabLocations, FindFuelPart1))
+  fmt.Println("Part 2 result:", FindCheapestFuel(crabLocations, FindFuelPart2))
 }
 
 func FindCheapestFuel(crabLocations []int64, fuelFunc func([]int64, int64) int64) int64 {
@@ -28,6 +29,15 @@ func FindFuelPart1(crabLocations []int64, goToLocation int64) (fuelAmount int64)
   fuelAmount = 0
   for _, location := range crabLocations {
     fuelAmount += aoc.AbsInt64(goToLocation - location)
+  }
+  return
+}
+
+func FindFuelPart2(crabLocations []int64, goToLocation int64) (fuelAmount int64) {
+  fuelAmount = 0
+  for _, location := range crabLocations {
+    distance := aoc.AbsInt64(goToLocation - location)
+    fuelAmount += (distance * (distance + 1)) / 2
   }
   return
 }
