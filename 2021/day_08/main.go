@@ -35,6 +35,11 @@ const (     //   ABCDEFG
 
 func main() {
   var result int
+  result = solveInput()
+  fmt.Println(result)
+}
+
+func solveInput() (result int) {
   for _, inputLine := range aoc.FileToLines("input") {
     _, values := parseSignalsAndValuesString(inputLine)
     for _, valueString := range values {
@@ -43,7 +48,7 @@ func main() {
       }
     }
   }
-  fmt.Println(result)
+  return result
 }
 
 func parseValue(valueString string) (value int){
