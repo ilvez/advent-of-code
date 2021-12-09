@@ -16,13 +16,15 @@ const (
 type Point struct {
   value int
   n, s, e, w direction
+  bottom bool
 }
 
 type Map [][]Point
 
 func main() {
-  depthMap := parseMap("input")
+  depthMap := parseMap("input2")
   parseDirections(&depthMap)
+  detectBottoms(&depthMap)
   printPart1Result(&depthMap)
 }
 
@@ -31,12 +33,23 @@ func printPart1Result(depthMap *Map) {
   riskLevel := 0
   for _, row := range(*depthMap) {
     for _, point := range(row) {
-      if point.n == up && point.e == up && point.s == up && point.w == up {
+      if point.bottom {
         riskLevel += 1 + point.value
       }
     }
   }
   fmt.Println("Part 1 result:", riskLevel)
+}
+
+func detectBottoms(depthMap *Map) {
+  for y := 0; y < len(*depthMap); y++ {
+    for x := 0; x < len((*depthMap)[y]); x++ {
+      point := (*depthMap)[y][x]
+      if point.n == up && point.e == up && point.s == up && point.w == up {
+        (*depthMap)[y][x].bottom = true
+      }
+    }
+  }
 }
 
 func parseDirections(depthMap *Map) {
@@ -92,16 +105,15 @@ func parseMap(fileName string) (depthMap Map) {
 }
 
 func printPoint(point Point) {
+  var bottom int
+  if point.bottom { bottom = 1 }
   fmt.Print(
     fmt.Sprint(
       "[",
       point.value,
-      ", nesw:",
-      point.n,
-      point.e,
-      point.s,
-      point.w,
-      "]",
+      ", b:",
+      bottom,
+      "] ",
     ),
   )
 }
