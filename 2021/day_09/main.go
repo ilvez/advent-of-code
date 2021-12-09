@@ -3,7 +3,6 @@ package main
 import(
   aoc "aocgo/aochelper"
   "fmt"
-  _ "strings"
 )
 
 type direction int
@@ -17,8 +16,10 @@ type Point struct {
   value int
   n, s, e, w direction
   bottom bool
+  basinSize int
 }
 
+type L struct { x, y int }
 type Map [][]Point
 
 func main() {
@@ -26,8 +27,28 @@ func main() {
   parseDirections(&depthMap)
   detectBottoms(&depthMap)
   printPart1Result(&depthMap)
+  walkBasin(&depthMap, L {x: 9, y: 0}, 0)
+  printMap(&depthMap)
 }
 
+func walkBasin(depthMap *Map, dst L, basinSize int) int {
+  fmt.Println(dst, (*depthMap)[dst.y][dst.x].value, basinSize)
+  (*depthMap)[dst.y][dst.x].basinSize = basinSize + 1
+  if dst.y - 1 >= 0 && (*depthMap)[dst.y - 1][dst.x].basinSize == 0 && (*depthMap)[dst.y - 1][dst.x].value < 9  {
+    basinSize = walkBasin(depthMap, L{x: dst.x, y: dst.y - 1}, basinSize)
+  }
+  if dst.x + 1 < len((*depthMap)[dst.y]) && (*depthMap)[dst.y][dst.x+1].basinSize == 0 && (*depthMap)[dst.y][dst.x+1].value < 9  {
+    basinSize = walkBasin(depthMap, L{x: dst.x+1, y: dst.y}, basinSize)
+  }
+  if dst.y + 1 < len(*depthMap) && (*depthMap)[dst.y+1][dst.x].basinSize == 0 && (*depthMap)[dst.y+1][dst.x].value < 9  {
+    basinSize = walkBasin(depthMap, L{x: dst.x, y: dst.y+1}, basinSize)
+  }
+  if dst.x - 1 >= 0 && (*depthMap)[dst.y][dst.x-1].basinSize == 0 && (*depthMap)[dst.y][dst.x-1].value < 9  {
+    basinSize = walkBasin(depthMap, L{x: dst.x-1, y: dst.y}, basinSize)
+  }
+  (*depthMap)[dst.y][dst.x].basinSize = basinSize + 1
+  return basinSize + 1
+}
 
 func printPart1Result(depthMap *Map) {
   riskLevel := 0
@@ -105,14 +126,12 @@ func parseMap(fileName string) (depthMap Map) {
 }
 
 func printPoint(point Point) {
-  var bottom int
-  if point.bottom { bottom = 1 }
   fmt.Print(
     fmt.Sprint(
       "[",
       point.value,
       ", b:",
-      bottom,
+      point.basinSize,
       "] ",
     ),
   )
