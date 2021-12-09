@@ -14,39 +14,37 @@ const (
 
 type Point struct {
   value int
+  location L
   n, s, e, w direction
   bottom bool
-  basinSize int
+  visited bool
 }
 
 type L struct { x, y int }
 type Map [][]Point
 
 func main() {
-  depthMap := parseMap("input2")
+  depthMap := parseMap("input")
   parseDirections(&depthMap)
   detectBottoms(&depthMap)
   printPart1Result(&depthMap)
-  walkBasin(&depthMap, L {x: 9, y: 0}, 0)
-  printMap(&depthMap)
+  printPart2Result(&depthMap)
 }
 
 func walkBasin(depthMap *Map, dst L, basinSize int) int {
-  fmt.Println(dst, (*depthMap)[dst.y][dst.x].value, basinSize)
-  (*depthMap)[dst.y][dst.x].basinSize = basinSize + 1
-  if dst.y - 1 >= 0 && (*depthMap)[dst.y - 1][dst.x].basinSize == 0 && (*depthMap)[dst.y - 1][dst.x].value < 9  {
+  (*depthMap)[dst.y][dst.x].visited = true
+  if dst.y - 1 >= 0 && !(*depthMap)[dst.y - 1][dst.x].visited && (*depthMap)[dst.y - 1][dst.x].value < 9  {
     basinSize = walkBasin(depthMap, L{x: dst.x, y: dst.y - 1}, basinSize)
   }
-  if dst.x + 1 < len((*depthMap)[dst.y]) && (*depthMap)[dst.y][dst.x+1].basinSize == 0 && (*depthMap)[dst.y][dst.x+1].value < 9  {
+  if dst.x + 1 < len((*depthMap)[dst.y]) && !(*depthMap)[dst.y][dst.x+1].visited && (*depthMap)[dst.y][dst.x+1].value < 9  {
     basinSize = walkBasin(depthMap, L{x: dst.x+1, y: dst.y}, basinSize)
   }
-  if dst.y + 1 < len(*depthMap) && (*depthMap)[dst.y+1][dst.x].basinSize == 0 && (*depthMap)[dst.y+1][dst.x].value < 9  {
+  if dst.y + 1 < len(*depthMap) && !(*depthMap)[dst.y+1][dst.x].visited && (*depthMap)[dst.y+1][dst.x].value < 9  {
     basinSize = walkBasin(depthMap, L{x: dst.x, y: dst.y+1}, basinSize)
   }
-  if dst.x - 1 >= 0 && (*depthMap)[dst.y][dst.x-1].basinSize == 0 && (*depthMap)[dst.y][dst.x-1].value < 9  {
+  if dst.x - 1 >= 0 && !(*depthMap)[dst.y][dst.x-1].visited && (*depthMap)[dst.y][dst.x-1].value < 9  {
     basinSize = walkBasin(depthMap, L{x: dst.x-1, y: dst.y}, basinSize)
   }
-  (*depthMap)[dst.y][dst.x].basinSize = basinSize + 1
   return basinSize + 1
 }
 
@@ -60,6 +58,25 @@ func printPart1Result(depthMap *Map) {
     }
   }
   fmt.Println("Part 1 result:", riskLevel)
+}
+
+func printPart2Result(depthMap *Map) {
+  var size1, size2, size3 int
+  for _, row := range(*depthMap) {
+    for _, point := range(row) {
+      if point.bottom {
+        basinSize := walkBasin(depthMap, point.location, 0)
+        if basinSize > size1 {
+          size1, size2, size3 = basinSize, size1, size2
+        } else if basinSize > size2 {
+          size2, size3 = basinSize, size2
+        } else if basinSize > size3 {
+          size3 = basinSize
+        }
+      }
+    }
+  }
+  fmt.Println("Part 2 result:", size1 * size2 * size3)
 }
 
 func detectBottoms(depthMap *Map) {
@@ -119,6 +136,7 @@ func parseMap(fileName string) (depthMap Map) {
     for j, pointString := range line {
       depthMap[i][j] = Point {
         value: aoc.StringToInt(string(pointString)),
+        location: L { x: j, y: i },
       }
     }
   }
@@ -131,7 +149,7 @@ func printPoint(point Point) {
       "[",
       point.value,
       ", b:",
-      point.basinSize,
+      point.visited,
       "] ",
     ),
   )
