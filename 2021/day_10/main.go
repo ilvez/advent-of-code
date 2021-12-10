@@ -5,6 +5,7 @@ import(
   "errors"
   "fmt"
   "os"
+  "sort"
 )
 func main() {
   printPart1Solution()
@@ -20,18 +21,26 @@ func printPart1Solution() {
       score += i
     }
   }
-  fmt.Println("Part1 solution:", score)
+  fmt.Println("Part 1 solution:", score)
 }
 
 func printPart2Solution() {
-  for _, instructions := range aoc.FileToLines("input2") {
+  scores := allScores()
+  sort.Ints(scores)
+  fmt.Println("Part 2 solution:", scores[len(scores)/2])
+}
+
+func allScores() []int {
+  lines := aoc.FileToLines("input")
+  scores := make([]int, 0)
+  for _, instructions := range lines {
     incomplete, err := parseChunks(instructions)
     if err != nil {
       continue
     }
-    fmt.Println(incomplete.toString())
-    fmt.Println(completeChunkScore(incomplete))
+    scores = append(scores, completeChunkScore(incomplete))
   }
+  return scores
 }
 
 func completeChunkScore(chunk *Chunk) (points int) {
@@ -40,7 +49,9 @@ func completeChunkScore(chunk *Chunk) (points int) {
     points = points * 5 + completePoints((*currentChunk).closingCommand())
     currentChunk = (*currentChunk).parent
   }
-  points = points * 5 + completePoints((*currentChunk).closingCommand())
+  if (*currentChunk).closingCommand() != "" {
+    points = points * 5 + completePoints((*currentChunk).closingCommand())
+  }
   return
 }
 
@@ -49,10 +60,6 @@ func parseChunks(instructions string) (*Chunk, error) {
   currentChunk := &chunk
   for _, i := range instructions {
     command := string(i)
-    if (*currentChunk).opening == "" {
-      (*currentChunk).opening = command
-      continue
-    }
     if isOpening(command) {
       currentChunk = (*currentChunk).newSubChunk(command)
     } else {
