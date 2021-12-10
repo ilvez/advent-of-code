@@ -24,3 +24,14 @@ func (s *Stack) Peek() (interface{}, error) {
   }
   return -1, errors.New("stack is empty")
 }
+
+func (s *Stack) PeekInto(i int) (interface{}, error) {
+  if len(*s) - i > 0 {
+    return (*s)[len(*s)-i], nil
+  }
+  return -1, errors.New("stack is empty")
+}
+
+func (s *Stack) Data() []interface{} {
+  return (*s)
+}
