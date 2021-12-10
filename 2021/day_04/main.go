@@ -8,6 +8,11 @@ import "regexp"
 
 func main() {
   inputs := FileToLines("input")
+  printPart1Solution(inputs)
+  printPart2Solution(inputs)
+}
+
+func printPart1Solution(inputs []string) {
   bingoNumbers := BingoStringToNumbers(inputs[0])
 
   bestBoardPosition := 99999
@@ -22,7 +27,24 @@ func main() {
     }
   }
 
-  fmt.Println("Result:", winningResult)
+  fmt.Println("Part 1 result:", winningResult)
+}
+
+func printPart2Solution(inputs []string) {
+  bingoNumbers := BingoStringToNumbers(inputs[0])
+  bestBoardPosition := 0
+  winningResult := 0
+
+  for i := 1; i <= NumberOfBoards(inputs); i++ {
+    board := ParseBoard(inputs, i)
+    position, result := SolveBoard(board, bingoNumbers)
+    if position > bestBoardPosition {
+      bestBoardPosition = position
+      winningResult = result
+    }
+  }
+
+  fmt.Println("Part 2 result:", winningResult)
 }
 
 func SolveBoard(board [][]int, bingoNumbers []int) (winningPosition int, solution int) {
@@ -107,4 +129,3 @@ func FileToLines(filePath string) (lines []string) {
   err = scanner.Err()
   return
 }
-
