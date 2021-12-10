@@ -110,7 +110,11 @@ func (c *Chunk) toString() string {
   for _, chunk := range c.chunks {
     chunks += chunk.toString()
   }
-  parent := (*c.parent).opening
+  parent := "R"
+  if c.parent != nil {
+    parent = (*c.parent).opening
+  }
+
   return fmt.Sprintf(
     "<%s%s%s%s [%s] %s%s%s>",
     colorGreen,
