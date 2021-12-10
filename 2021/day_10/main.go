@@ -2,41 +2,60 @@ package main
 
 import(
   aoc "aocgo/aochelper"
+  "errors"
   "fmt"
   "os"
 )
 func main() {
-  chunk, _ := parseChunks("<{([([[(<>()){}]>(<<{{")
-  chunk.printChunk()
-  // c := newChunk("(")
-  // c.printChunk()
-  // c.newSubChunk("[")
-  // c.closeChunk(")")
-  // c.printChunk()
-  //printPart1Solution()
+  printPart1Solution()
 }
 
-func parseChunks(instructions string) (chunk Chunk, illegal rune) {
+func printPart1Solution() {
+  score := 0
+  for _, instructions := range aoc.FileToLines("input") {
+    _, illegal := parseChunks(instructions)
+    if illegal != "" {
+      i := illegalToPoints(illegal)
+      score += i
+    }
+  }
+  fmt.Println("Part1 solution:", score)
+}
+
+func parseChunks(instructions string) (Chunk, string) {
+  chunk := Chunk {}
+  currentChunk := &chunk
   for _, i := range instructions {
     command := string(i)
-    if chunk.opening == "" {
-      chunk.opening = command
+    if (*currentChunk).opening == "" {
+      (*currentChunk).opening = command
       continue
     }
     if isOpening(command) {
-      chunk.newSubChunk(command)
+      currentChunk = (*currentChunk).newSubChunk(command)
+    } else {
+      err := currentChunk.closeChunk(command)
+      if err != nil {
+        return *currentChunk, command
+      }
+      if currentChunk.parent != nil {
+        currentChunk = currentChunk.parent
+      } else {
+        return *currentChunk, ""
+      }
     }
   }
-  return chunk, illegal
+  return *currentChunk, ""
 }
 
 type Chunk struct {
   opening, closing string
+  parent *Chunk
   chunks []Chunk
 }
 
 func newChunk(opening string) Chunk {
-  return Chunk { opening: "(" }
+  return Chunk { opening: opening }
 }
 
 func (c *Chunk) newSubChunk(opening string) (*Chunk) {
@@ -45,6 +64,7 @@ func (c *Chunk) newSubChunk(opening string) (*Chunk) {
     os.Exit(1)
   }
   subChunk := newChunk(opening)
+  subChunk.parent = c
   c.chunks = append(c.chunks, subChunk)
   return &subChunk
 }
@@ -53,39 +73,48 @@ func (c *Chunk) isOpen() bool {
   return c.closing == ""
 }
 
+const (
+    colorReset = "\033[0m"
+    colorRed = "\033[31m"
+    colorGreen = "\033[32m"
+    colorYellow = "\033[33m"
+    colorBlue = "\033[34m"
+    colorPurple = "\033[35m"
+    colorCyan = "\033[36m"
+    colorWhite = "\033[37m"
+    bold = "\033[38m"
+)
 func (c *Chunk) toString() string {
   chunks := ""
   for _, chunk := range c.chunks {
     chunks += chunk.toString()
   }
-  return fmt.Sprintf("{'%s%s', [%s], %t}", c.opening, c.closing, chunks, c.isOpen())
+  parent := (*c.parent).opening
+  return fmt.Sprintf(
+    "<%s%s%s%s [%s] %s%s%s>",
+    colorGreen,
+    c.opening,
+    c.closing,
+    colorReset,
+    chunks,
+    colorRed,
+    parent,
+    colorReset,
+  )
 }
 
 func (c *Chunk) printChunk() {
   fmt.Println(c.toString())
 }
 
-func (c *Chunk) closeChunk(closing string) {
+func (c *Chunk) closeChunk(closing string) error {
   if matchingOpening(closing) == c.opening {
     c.closing = closing
   } else {
-    fmt.Println("Trying to close", c, "with", string(closing))
-    os.Exit(1)
+    msg := fmt.Sprintf("Trying to close", c.toString(), "with", closing)
+    return errors.New(msg)
   }
-}
-
-func printPart1Solution() {
-  score := 0
-  for _, instructions := range aoc.FileToLines("input2") {
-    //fmt.Println(instructions)
-    _, illegal := parseChunks(instructions)
-    if illegal > 0 {
-      i := illegalToPoints(illegal)
-      //fmt.Println(string(i))
-      score += i
-    }
-  }
-  fmt.Println(score)
+  return nil
 }
 
 
@@ -120,14 +149,14 @@ func stackAsString(stack aoc.Stack) (result string) {
   return
 }
 
-func illegalToPoints(illegal rune) int {
-  if illegal == ')' {
+func illegalToPoints(illegal string) int {
+  if illegal == ")" {
     return 3
-  } else if illegal == ']' {
+  } else if illegal == "]" {
     return 57
-  } else if illegal == '}' {
+  } else if illegal == "}" {
     return 1197
-  } else if illegal == '>' {
+  } else if illegal == ">" {
     return 25137
   }
   return 0
