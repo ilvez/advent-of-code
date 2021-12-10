@@ -8,13 +8,14 @@ import(
   "sort"
 )
 func main() {
-  printPart1Solution()
-  printPart2Solution()
+  inputFile := "input"
+  printPart1Solution(inputFile)
+  printPart2Solution(inputFile)
 }
 
-func printPart1Solution() {
+func printPart1Solution(inputFile string) {
   score := 0
-  for _, instructions := range aoc.FileToLines("input") {
+  for _, instructions := range aoc.FileToLines(inputFile) {
     _, err := parseChunks(instructions)
     if err != nil {
       i := illegalToPoints(err)
@@ -24,14 +25,8 @@ func printPart1Solution() {
   fmt.Println("Part 1 solution:", score)
 }
 
-func printPart2Solution() {
-  scores := allScores()
-  sort.Ints(scores)
-  fmt.Println("Part 2 solution:", scores[len(scores)/2])
-}
-
-func allScores() []int {
-  lines := aoc.FileToLines("input")
+func printPart2Solution(inputFile string) {
+  lines := aoc.FileToLines(inputFile)
   scores := make([]int, 0)
   for _, instructions := range lines {
     incomplete, err := parseChunks(instructions)
@@ -40,7 +35,8 @@ func allScores() []int {
     }
     scores = append(scores, completeChunkScore(incomplete))
   }
-  return scores
+  sort.Ints(scores)
+  fmt.Println("Part 2 solution:", scores[len(scores)/2])
 }
 
 func completeChunkScore(chunk *Chunk) (points int) {
@@ -83,16 +79,12 @@ type Chunk struct {
   chunks []Chunk
 }
 
-func newChunk(opening string) Chunk {
-  return Chunk { opening: opening }
-}
-
 func (c *Chunk) newSubChunk(opening string) (*Chunk) {
   if !c.isOpen() {
     fmt.Println("Trying to add subchunk to closed chunk", c.toString(), string(opening))
     os.Exit(1)
   }
-  subChunk := newChunk(opening)
+  subChunk := Chunk { opening: opening }
   subChunk.parent = c
   c.chunks = append(c.chunks, subChunk)
   return &subChunk
@@ -195,10 +187,4 @@ const (
     colorReset = "\033[0m"
     colorRed = "\033[31m"
     colorGreen = "\033[32m"
-    colorYellow = "\033[33m"
-    colorBlue = "\033[34m"
-    colorPurple = "\033[35m"
-    colorCyan = "\033[36m"
-    colorWhite = "\033[37m"
-    bold = "\033[38m"
 )
