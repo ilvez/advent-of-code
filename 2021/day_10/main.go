@@ -8,12 +8,7 @@ import(
 )
 func main() {
   printPart1Solution()
-  incomplete, err := parseChunks("[({(<(())[]>[[{[]{<()<>>")
-  if err != nil {
-    fmt.Println(err)
-    os.Exit(-1)
-  }
-  incomplete.printChunk()
+  printPart2Solution()
 }
 
 func printPart1Solution() {
@@ -28,7 +23,28 @@ func printPart1Solution() {
   fmt.Println("Part1 solution:", score)
 }
 
-func parseChunks(instructions string) (Chunk, error) {
+func printPart2Solution() {
+  for _, instructions := range aoc.FileToLines("input2") {
+    incomplete, err := parseChunks(instructions)
+    if err != nil {
+      continue
+    }
+    fmt.Println(incomplete.toString())
+    fmt.Println(completeChunkScore(incomplete))
+  }
+}
+
+func completeChunkScore(chunk *Chunk) (points int) {
+  currentChunk := chunk
+  for (*currentChunk).parent != nil {
+    points = points * 5 + completePoints((*currentChunk).closingCommand())
+    currentChunk = (*currentChunk).parent
+  }
+  points = points * 5 + completePoints((*currentChunk).closingCommand())
+  return
+}
+
+func parseChunks(instructions string) (*Chunk, error) {
   chunk := Chunk {}
   currentChunk := &chunk
   for _, i := range instructions {
@@ -42,16 +58,16 @@ func parseChunks(instructions string) (Chunk, error) {
     } else {
       err := currentChunk.closeChunk(command)
       if err != nil {
-        return *currentChunk, err
+        return currentChunk, err
       }
       if currentChunk.parent != nil {
         currentChunk = currentChunk.parent
       } else {
-        return *currentChunk, nil
+        return currentChunk, nil
       }
     }
   }
-  return *currentChunk, nil
+  return currentChunk, nil
 }
 
 type Chunk struct {
@@ -73,6 +89,16 @@ func (c *Chunk) newSubChunk(opening string) (*Chunk) {
   subChunk.parent = c
   c.chunks = append(c.chunks, subChunk)
   return &subChunk
+}
+
+func (c *Chunk) closingCommand() (match string) {
+  switch c.opening {
+    case "{": match = "}"
+    case "(": match = ")"
+    case "[": match = "]"
+    case "<": match = ">"
+  }
+  return
 }
 
 func (c *Chunk) isOpen() bool {
@@ -125,6 +151,19 @@ func matchingOpening(i string) (match string) {
   }
 
   return
+}
+
+func completePoints(i string) int {
+  if i == ")" {
+    return 1
+  } else if i == "]" {
+    return 2
+  } else if i == "}" {
+    return 3
+  } else if i == ">" {
+    return 4
+  }
+  return 0
 }
 
 func illegalToPoints(err error) int {
