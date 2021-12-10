@@ -8,21 +8,27 @@ import(
 )
 func main() {
   printPart1Solution()
+  incomplete, err := parseChunks("[({(<(())[]>[[{[]{<()<>>")
+  if err != nil {
+    fmt.Println(err)
+    os.Exit(-1)
+  }
+  incomplete.printChunk()
 }
 
 func printPart1Solution() {
   score := 0
   for _, instructions := range aoc.FileToLines("input") {
-    _, illegal := parseChunks(instructions)
-    if illegal != "" {
-      i := illegalToPoints(illegal)
+    _, err := parseChunks(instructions)
+    if err != nil {
+      i := illegalToPoints(err)
       score += i
     }
   }
   fmt.Println("Part1 solution:", score)
 }
 
-func parseChunks(instructions string) (Chunk, string) {
+func parseChunks(instructions string) (Chunk, error) {
   chunk := Chunk {}
   currentChunk := &chunk
   for _, i := range instructions {
@@ -36,16 +42,16 @@ func parseChunks(instructions string) (Chunk, string) {
     } else {
       err := currentChunk.closeChunk(command)
       if err != nil {
-        return *currentChunk, command
+        return *currentChunk, err
       }
       if currentChunk.parent != nil {
         currentChunk = currentChunk.parent
       } else {
-        return *currentChunk, ""
+        return *currentChunk, nil
       }
     }
   }
-  return *currentChunk, ""
+  return *currentChunk, nil
 }
 
 type Chunk struct {
@@ -73,17 +79,6 @@ func (c *Chunk) isOpen() bool {
   return c.closing == ""
 }
 
-const (
-    colorReset = "\033[0m"
-    colorRed = "\033[31m"
-    colorGreen = "\033[32m"
-    colorYellow = "\033[33m"
-    colorBlue = "\033[34m"
-    colorPurple = "\033[35m"
-    colorCyan = "\033[36m"
-    colorWhite = "\033[37m"
-    bold = "\033[38m"
-)
 func (c *Chunk) toString() string {
   chunks := ""
   for _, chunk := range c.chunks {
@@ -111,19 +106,13 @@ func (c *Chunk) closeChunk(closing string) error {
   if matchingOpening(closing) == c.opening {
     c.closing = closing
   } else {
-    msg := fmt.Sprintf("Trying to close", c.toString(), "with", closing)
-    return errors.New(msg)
+    return errors.New(closing)
   }
   return nil
 }
 
-
 func isOpening(i string) bool {
   return i == "{" || i == "(" || i == "[" || i == "<"
-}
-
-func isClosing(i string) bool {
-  return i == "}" || i == ")" || i == "]" || i == ">"
 }
 
 func matchingOpening(i string) (match string) {
@@ -138,18 +127,8 @@ func matchingOpening(i string) (match string) {
   return
 }
 
-func printCommands(stack aoc.Stack) {
-  fmt.Println(stackAsString(stack))
-}
-
-func stackAsString(stack aoc.Stack) (result string) {
-  for _, c := range stack.Data() {
-    result += string(c.(rune))
-  }
-  return
-}
-
-func illegalToPoints(illegal string) int {
+func illegalToPoints(err error) int {
+  illegal := fmt.Sprint(err)
   if illegal == ")" {
     return 3
   } else if illegal == "]" {
@@ -161,3 +140,15 @@ func illegalToPoints(illegal string) int {
   }
   return 0
 }
+
+const (
+    colorReset = "\033[0m"
+    colorRed = "\033[31m"
+    colorGreen = "\033[32m"
+    colorYellow = "\033[33m"
+    colorBlue = "\033[34m"
+    colorPurple = "\033[35m"
+    colorCyan = "\033[36m"
+    colorWhite = "\033[37m"
+    bold = "\033[38m"
+)
