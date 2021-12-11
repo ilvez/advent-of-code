@@ -15,9 +15,10 @@ type Point struct {
 type Map [][]Point
 type Loc struct { x, y int }
 
+var part1FlashCount int
+
 func main() {
-  inputFile := "input3"
-  // printPart1Solution(inputFile)
+  inputFile := "input"
   // printPart2Solution(inputFile)
 
   m := parseMap(inputFile)
@@ -26,6 +27,7 @@ func main() {
     iterateStep(&m)
     printMap(&m)
   }
+  printPart1Solution()
 }
 
 func iterateStep(m *Map) {
@@ -51,6 +53,7 @@ func increasePoint(p *Point) (flash bool) {
     if p.value == 9 {
       p.value = 0
       p.illuminated = true
+      part1FlashCount += 1
       return true
     }
     p.value += 1
@@ -143,8 +146,8 @@ func printPoint(p Point) {
   )
 }
 
-func printPart1Solution(inputFile string) {
-  fmt.Println("Part 1 solution:", inputFile)
+func printPart1Solution() {
+  fmt.Println("Part 1 solution:", part1FlashCount)
 }
 
 func printPart2Solution(inputFile string) {
