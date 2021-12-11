@@ -8,10 +8,12 @@ import(
 
 type Point struct {
   value int
-  visitedStep int
+  illuminated bool
+  loc Loc
 }
 
 type Map [][]Point
+type Loc struct { x, y int }
 
 func main() {
   inputFile := "input2"
@@ -20,62 +22,125 @@ func main() {
 
   m := parseMap(inputFile)
   printMap(&m)
-  iterateStep(&m, 1)
+  iterateStep(&m)
+  printMap(&m)
+  iterateStep(&m)
   printMap(&m)
 }
 
-func iterateStep(m *Map, step int) {
+func iterateStep(m *Map) {
   for y, row := range(*m) {
     for x := range(row) {
-      point := &(*m)[y][x]
-      if point.visitedStep < step {
-        if point.value == 9{
-          point.value = 0
-        } else {
-          point.value += 1
-        }
-        point.step += 1
+      p := &(*m)[y][x]
+      if p.value == 0  && !p.illuminated {
+        p.value += 1
+      } else if increasePoint(p) {
+        illuminateClose(m, (*p).loc)
       }
+    }
+  }
+  // Reset illuminated since we have completed this step
+  for y, row := range(*m) {
+    for x := range(row) {
+      p := &(*m)[y][x]
+      p.illuminated = false
     }
   }
 }
 
-func parseMap(fileName string) (depthMap Map) {
+func increasePoint(p *Point) (flash bool) {
+  if p.value == 0 {
+    return false
+  }
+  if p.value == 9 {
+    p.value = 0
+    return true
+  }
+  p.value += 1
+  return false
+}
+
+func illuminateClose(m *Map, dst Loc) {
+  if dst.y - 1 >= 0 {
+    if dst.x - 1 >= 0 {
+      illuminateDirection(m, &(*m)[dst.y - 1][dst.x - 1])
+    }
+
+    illuminateDirection(m, &(*m)[dst.y - 1][dst.x])
+
+    if dst.x + 1 < len((*m)[dst.y]) {
+      illuminateDirection(m, &(*m)[dst.y - 1][dst.x + 1])
+    }
+  }
+
+  if dst.x + 1 < len((*m)[dst.y]) {
+    illuminateDirection(m, &(*m)[dst.y][dst.x + 1])
+  }
+
+  if dst.y + 1 < len(*m) {
+    if dst.x + 1 < len((*m)[dst.y]) {
+      illuminateDirection(m, &(*m)[dst.y + 1][dst.x + 1])
+    }
+
+    illuminateDirection(m, &(*m)[dst.y + 1][dst.x])
+
+    if dst.x - 1 >= 0 {
+      illuminateDirection(m, &(*m)[dst.y + 1][dst.x - 1])
+    }
+  }
+
+  if dst.x - 1 >= 0 {
+    illuminateDirection(m, &(*m)[dst.y][dst.x - 1])
+  }
+}
+
+func illuminateDirection(m *Map, p *Point) {
+  if !p.illuminated && p.value != 0 {
+    if increasePoint(p) {
+      p.illuminated = true
+      illuminateClose(m, (*p).loc)
+    }
+  }
+}
+
+func parseMap(fileName string) (m Map) {
   lines := aoc.FileToLines(fileName)
-  depthMap = make([][]Point, len(lines))
+  m = make([][]Point, len(lines))
   for i, line := range lines {
-    depthMap[i] = make([]Point, len(line))
+    m[i] = make([]Point, len(line))
     for j, pointString := range line {
-      depthMap[i][j] = Point {
+      m[i][j] = Point {
         value: aoc.StringToInt(string(pointString)),
+        loc: Loc { x: j, y: i },
       }
     }
   }
   return
 }
 
-func printMap(depthMap *Map) {
-  for _, row := range(*(depthMap)) {
-    for _, point := range(row) {
-      printPoint(point)
+func printMap(m *Map) {
+  for _, row := range(*(m)) {
+    for _, p := range(row) {
+      printPoint(p)
     }
     fmt.Println()
   }
+  fmt.Println("------")
 }
 
-func printPoint(point Point) {
+func printPoint(p Point) {
   var color string
   switch {
-  case point.value == 0 : color = colorRed
-  case point.value <= 5: color = colorWhite
-  case point.value < 9: color = colorGreen
-  case point.value == 9 : color = colorYellow
+  case p.value == 0 : color = colorRed
+  case p.value <= 5: color = colorWhite
+  case p.value < 9: color = colorGreen
+  case p.value == 9 : color = colorYellow
   default: color = colorGreen
   }
   fmt.Print(
     fmt.Sprint(
       color,
-      point.value,
+      p.value,
       colorReset,
     ),
   )
