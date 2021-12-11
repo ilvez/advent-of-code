@@ -16,25 +16,23 @@ type Map [][]Point
 type Loc struct { x, y int }
 
 func main() {
-  inputFile := "input2"
+  inputFile := "input3"
   // printPart1Solution(inputFile)
   // printPart2Solution(inputFile)
 
   m := parseMap(inputFile)
   printMap(&m)
-  iterateStep(&m)
-  printMap(&m)
-  iterateStep(&m)
-  printMap(&m)
+  for i := 0; i < 100; i++ {
+    iterateStep(&m)
+    printMap(&m)
+  }
 }
 
 func iterateStep(m *Map) {
   for y, row := range(*m) {
     for x := range(row) {
       p := &(*m)[y][x]
-      if p.value == 0  && !p.illuminated {
-        p.value += 1
-      } else if increasePoint(p) {
+      if increasePoint(p) {
         illuminateClose(m, (*p).loc)
       }
     }
@@ -49,14 +47,14 @@ func iterateStep(m *Map) {
 }
 
 func increasePoint(p *Point) (flash bool) {
-  if p.value == 0 {
-    return false
+  if !p.illuminated {
+    if p.value == 9 {
+      p.value = 0
+      p.illuminated = true
+      return true
+    }
+    p.value += 1
   }
-  if p.value == 9 {
-    p.value = 0
-    return true
-  }
-  p.value += 1
   return false
 }
 
@@ -95,9 +93,8 @@ func illuminateClose(m *Map, dst Loc) {
 }
 
 func illuminateDirection(m *Map, p *Point) {
-  if !p.illuminated && p.value != 0 {
+  if !p.illuminated {
     if increasePoint(p) {
-      p.illuminated = true
       illuminateClose(m, (*p).loc)
     }
   }
