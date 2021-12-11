@@ -8,6 +8,7 @@ import(
 
 type Point struct {
   value int
+  visitedStep int
 }
 
 type Map [][]Point
@@ -19,6 +20,24 @@ func main() {
 
   m := parseMap(inputFile)
   printMap(&m)
+  iterateStep(&m, 1)
+  printMap(&m)
+}
+
+func iterateStep(m *Map, step int) {
+  for y, row := range(*m) {
+    for x := range(row) {
+      point := &(*m)[y][x]
+      if point.visitedStep < step {
+        if point.value == 9{
+          point.value = 0
+        } else {
+          point.value += 1
+        }
+        point.step += 1
+      }
+    }
+  }
 }
 
 func parseMap(fileName string) (depthMap Map) {
@@ -47,10 +66,10 @@ func printMap(depthMap *Map) {
 func printPoint(point Point) {
   var color string
   switch {
+  case point.value == 0 : color = colorRed
   case point.value <= 5: color = colorWhite
-  case point.value < 9: color = colorYellow
-  case point.value == 9 : color = colorRed
-  case point.value == 0 : color = colorWhite
+  case point.value < 9: color = colorGreen
+  case point.value == 9 : color = colorYellow
   default: color = colorGreen
   }
   fmt.Print(
