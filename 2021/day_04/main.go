@@ -1,25 +1,25 @@
 package main
 
-import "fmt"
-import "os"
-import "bufio"
-import "strconv"
-import "regexp"
+import(
+  aoc "aocgo/aochelper"
+  "fmt"
+  "strconv"
+  "regexp"
+)
 
 func main() {
-  inputs := FileToLines("input")
+  inputs := aoc.FileToLines("input")
   printPart1Solution(inputs)
   printPart2Solution(inputs)
 }
 
 func printPart1Solution(inputs []string) {
-  bingoNumbers := BingoStringToNumbers(inputs[0])
-
-  bestBoardPosition := 99999
   winningResult := 0
+  bestBoardPosition := 99999
 
-  for i := 1; i <= NumberOfBoards(inputs); i++ {
-    board := ParseBoard(inputs, i)
+  bingoNumbers := parseIntArray(inputs[0])
+  boards := parseBoards(inputs[2:])
+  for _, board := range(boards) {
     position, result := SolveBoard(board, bingoNumbers)
     if position < bestBoardPosition {
       bestBoardPosition = position
@@ -31,12 +31,12 @@ func printPart1Solution(inputs []string) {
 }
 
 func printPart2Solution(inputs []string) {
-  bingoNumbers := BingoStringToNumbers(inputs[0])
+  bingoNumbers := parseIntArray(inputs[0])
   bestBoardPosition := 0
   winningResult := 0
 
-  for i := 1; i <= NumberOfBoards(inputs); i++ {
-    board := ParseBoard(inputs, i)
+  boards := parseBoards(inputs[2:])
+  for _, board := range(boards) {
     position, result := SolveBoard(board, bingoNumbers)
     if position > bestBoardPosition {
       bestBoardPosition = position
@@ -47,20 +47,31 @@ func printPart2Solution(inputs []string) {
   fmt.Println("Part 2 result:", winningResult)
 }
 
-func SolveBoard(board [][]int, bingoNumbers []int) (winningPosition int, solution int) {
-  markedColumns := make([]int, 5)
-  markedRows := make([]int, 5)
+func printBoard(board Board) {
+  fmt.Println("----------------")
+  for _, row := range board {
+    for _, number := range row {
+      fmt.Print(number, "|")
+    }
+    fmt.Println()
+  }
+  fmt.Println("----------------")
+}
+
+func SolveBoard(board Board, bingoNumbers []int) (winningPosition int, solution int) {
+  boardSize := len(board)
+  markedColumns := make([]int, boardSize)
+  markedRows := make([]int, boardSize)
   for position, bingoNumber := range bingoNumbers {
     rowPos, colPos := NumberPositionOnBoard(board, bingoNumber)
     if rowPos == -1 || colPos == -1 { continue }
     markedRows[rowPos] += 1
     markedColumns[colPos] += 1
     board[rowPos][colPos] = -1
-    if (IsBingo(markedRows) || IsBingo(markedColumns)) {
+    if (IsBingo(markedRows, boardSize) || IsBingo(markedColumns, boardSize)) {
       return position, FindSolution(board, bingoNumber)
     }
   }
-  fmt.Println("-------", markedColumns, markedRows)
   return -1, -1
 }
 
@@ -76,8 +87,8 @@ func FindSolution(board [][]int, winningNumber int) int {
   return solution * winningNumber
 }
 
-func IsBingo(markedPositions []int) bool {
-  for _, posCount := range markedPositions { if posCount == 5 { return true} }
+func IsBingo(markedPositions []int, boardSize int) bool {
+  for _, posCount := range markedPositions { if posCount == boardSize { return true} }
   return false
 }
 
@@ -92,20 +103,25 @@ func NumberPositionOnBoard(board [][]int, number int) (rowPos int, colPos int) {
   return -1, -1
 }
 
-func ParseBoard(inputs []string, boardNumber int) [][]int {
-  board := make([][]int, 0)
-  boardEndLine := boardNumber * 5 + boardNumber
-  for i := boardEndLine - 4; i <= boardEndLine; i++ {
-    board = append(board, BingoStringToNumbers(inputs[i]))
+type Board [][]int
+
+func parseBoards(inputs []string) []Board {
+  boards := make([]Board, 0)
+  var board Board
+  for _, line := range inputs {
+    bingoNumbers := parseIntArray(line)
+    if len(bingoNumbers) == 0 {
+      boards = append(boards, board)
+      board = make(Board, 0)
+      continue
+    }
+    board = append(board, bingoNumbers)
   }
-  return board
+  boards = append(boards, board)
+  return boards
 }
 
-func NumberOfBoards(inputs []string) int {
-  return (len(inputs) - 1) / 6
-}
-
-func BingoStringToNumbers(line string) []int {
+func parseIntArray(line string) []int {
   outputs := make([]int, 0)
   re := regexp.MustCompile(`\d+`)
   for _, numberString := range re.FindAllString(line, -1) {
@@ -113,19 +129,4 @@ func BingoStringToNumbers(line string) []int {
     outputs = append(outputs, number)
   }
   return outputs
-}
-
-func FileToLines(filePath string) (lines []string) {
-  file, err := os.Open(filePath)
-  if err != nil {
-    return
-  }
-  defer file.Close()
-
-  scanner := bufio.NewScanner(file)
-  for scanner.Scan() {
-    lines = append(lines, scanner.Text())
-  }
-  err = scanner.Err()
-  return
 }
