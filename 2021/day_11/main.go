@@ -15,22 +15,18 @@ type Point struct {
 type Map [][]Point
 type Loc struct { x, y int }
 
-var part1FlashCount int
+var globalFlashCount int
+var globalStepFlashCount int
 
 func main() {
   inputFile := "input"
-  // printPart2Solution(inputFile)
 
-  m := parseMap(inputFile)
-  printMap(&m)
-  for i := 0; i < 100; i++ {
-    iterateStep(&m)
-    printMap(&m)
-  }
-  printPart1Solution()
+  printPart1Solution(inputFile)
+  printPart2Solution(inputFile)
 }
 
 func iterateStep(m *Map) {
+  globalStepFlashCount = 0
   for y, row := range(*m) {
     for x := range(row) {
       p := &(*m)[y][x]
@@ -53,7 +49,8 @@ func increasePoint(p *Point) (flash bool) {
     if p.value == 9 {
       p.value = 0
       p.illuminated = true
-      part1FlashCount += 1
+      globalFlashCount += 1
+      globalStepFlashCount += 1
       return true
     }
     p.value += 1
@@ -104,6 +101,7 @@ func illuminateDirection(m *Map, p *Point) {
 }
 
 func parseMap(fileName string) (m Map) {
+  globalFlashCount = 0
   lines := aoc.FileToLines(fileName)
   m = make([][]Point, len(lines))
   for i, line := range lines {
@@ -146,12 +144,22 @@ func printPoint(p Point) {
   )
 }
 
-func printPart1Solution() {
-  fmt.Println("Part 1 solution:", part1FlashCount)
+func printPart1Solution(inputFile string) {
+  m := parseMap(inputFile)
+  for i := 0; i < 100; i++ {
+    iterateStep(&m)
+  }
+  fmt.Println("Part 1 solution:", globalFlashCount)
 }
 
 func printPart2Solution(inputFile string) {
-  fmt.Println("Part 2 solution:", inputFile)
+  m := parseMap(inputFile)
+  mapSize := len(m) * len(m[0])
+  i := 0
+  for ; globalStepFlashCount < mapSize; i++ {
+    iterateStep(&m)
+  }
+  fmt.Println("Part 2 solution:", i)
 }
 
 const (
