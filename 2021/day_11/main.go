@@ -59,35 +59,37 @@ func increasePoint(p *Point) (flash bool) {
 }
 
 func illuminateClose(m *Map, dst Loc) {
+  isWithinRowLower := dst.x - 1 >= 0
+  isWithinRowUpper := dst.x + 1 < len((*m)[dst.y])
   if dst.y - 1 >= 0 {
-    if dst.x - 1 >= 0 {
+    if isWithinRowLower {
       illuminateDirection(m, &(*m)[dst.y - 1][dst.x - 1])
     }
 
     illuminateDirection(m, &(*m)[dst.y - 1][dst.x])
 
-    if dst.x + 1 < len((*m)[dst.y]) {
+    if isWithinRowUpper {
       illuminateDirection(m, &(*m)[dst.y - 1][dst.x + 1])
     }
   }
 
-  if dst.x + 1 < len((*m)[dst.y]) {
+  if isWithinRowUpper {
     illuminateDirection(m, &(*m)[dst.y][dst.x + 1])
   }
 
   if dst.y + 1 < len(*m) {
-    if dst.x + 1 < len((*m)[dst.y]) {
+    if isWithinRowUpper {
       illuminateDirection(m, &(*m)[dst.y + 1][dst.x + 1])
     }
 
     illuminateDirection(m, &(*m)[dst.y + 1][dst.x])
 
-    if dst.x - 1 >= 0 {
+    if isWithinRowLower {
       illuminateDirection(m, &(*m)[dst.y + 1][dst.x - 1])
     }
   }
 
-  if dst.x - 1 >= 0 {
+  if isWithinRowLower {
     illuminateDirection(m, &(*m)[dst.y][dst.x - 1])
   }
 }
