@@ -28,17 +28,20 @@ func (edge *Edge) leadsToDeadEnd(es []Edge) bool {
   return true
 }
 
+func (edge *Edge) hasConnections(es []Edge) bool {
+  for _, e := range es {
+    if e.a == edge.b {
+      return true
+    }
+  }
+  return false
+}
+
 func (edge *Edge) isDeadEnd(es []Edge) bool {
   if edge.b.isEnd {
     return false
   }
-  for _, e := range es {
-    if e.a == edge.b {
-      return false
-    }
-  }
-
-  return !edge.b.isBig
+  return !edge.hasConnections(es) && !edge.b.isBig && !edge.a.isBig
 }
 
 func parseEdges(inputFile string) (es []Edge) {
