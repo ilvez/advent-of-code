@@ -3,7 +3,6 @@ package main
 import(
   aoc "aocgo/aochelper"
   "fmt"
-  _"os"
 )
 
 type Point struct {
