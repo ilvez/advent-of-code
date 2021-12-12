@@ -6,8 +6,12 @@ import(
   "strings"
 )
 func main() {
-  inputFile := "input2"
-  fmt.Println(parseEdges(inputFile))
+  inputFile := "input22"
+  es := parseEdges(inputFile)
+  // printEdges(es)
+  cleaned := cleanDeadEdges(es)
+  fmt.Println()
+  printEdges(cleaned)
 }
 
 func cleanDeadEdges(es []Edge) (cleanedEdges []Edge) {
