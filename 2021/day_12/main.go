@@ -23,9 +23,13 @@ func cleanDeadEdges(es []Edge) (cleanedEdges []Edge) {
   return
 }
 
-func (edge *Edge) isDeadEnd(es []Edge) bool {
+func (edge *Edge) leadsToDeadEnd(es []Edge) bool {
   fmt.Println("E", edge.toString())
-  if edge.b.isBig || edge.a.isBig {
+  return true
+}
+
+func (edge *Edge) isDeadEnd(es []Edge) bool {
+  if edge.b.isEnd {
     return false
   }
   for _, e := range es {
@@ -33,7 +37,8 @@ func (edge *Edge) isDeadEnd(es []Edge) bool {
       return false
     }
   }
-  return true
+
+  return !edge.b.isBig
 }
 
 func parseEdges(inputFile string) (es []Edge) {
