@@ -10,7 +10,26 @@ func main() {
   fmt.Println(parseEdges(inputFile))
 }
 
-func cleanDeadEdges(edges *[]Edge) {
+func cleanDeadEdges(es []Edge) (cleanedEdges []Edge) {
+  for _, e := range es {
+    if !e.isDeadEnd(es) {
+      cleanedEdges = append(cleanedEdges, e)
+    }
+  }
+  return
+}
+
+func (edge *Edge) isDeadEnd(es []Edge) bool {
+  fmt.Println("E", edge.toString())
+  if edge.b.isBig || edge.a.isBig {
+    return false
+  }
+  for _, e := range es {
+    if e.a == edge.b {
+      return false
+    }
+  }
+  return true
 }
 
 func parseEdges(inputFile string) (edges []Edge) {
