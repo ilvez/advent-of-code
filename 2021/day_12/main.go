@@ -37,7 +37,7 @@ func parseEdges(inputFile string) (es []Edge) {
   for _, line := range lines {
     nodes := strings.Split(line, "-")
     a := Node { value: nodes[0], isBig: isBig(nodes[0])}
-    b := Node { value: nodes[1], isBig: isBig(nodes[1])}
+    b := Node { value: nodes[1], isBig: isBig(nodes[1]), isEnd: nodes[1] == "end" }
     es = append(es, Edge { a: a, b: b })
   }
   return
@@ -46,6 +46,7 @@ func parseEdges(inputFile string) (es []Edge) {
 type Node struct {
   value string
   isBig bool
+  isEnd bool
 }
 
 type Edge struct {
@@ -62,6 +63,9 @@ func printEdges(es []Edge) {
   }
 }
 
+func (n *Node) toString() string {
+  return fmt.Sprintf("%s", n.value)
+}
 func (e *Edge) toString() string {
   return fmt.Sprintf("%s-%s", e.a.value, e.b.value)
 }
