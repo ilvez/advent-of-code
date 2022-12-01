@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-const _ = require('lodash')
+import * as _ from 'lodash'
 
 function fileToStringArray(fileName: string):string[] {
   const projectDir = process.env.PWD || '.'
@@ -17,16 +17,15 @@ function getNumberArray(content:string[]):number[] {
 function getCarryAmounts(content:number[]):number[] {
   var result:number[] = []
   var current:number = 0
-  content.forEach(
-    function(item:number){
-      if (item == 0) {
-        result.push(current)
-        current = 0
-      } else {
-        current += item
-      }
+  content.forEach((item:number) => {
+    if (item == 0) {
+      result.push(current)
+      current = 0
+    } else {
+      current += item
     }
-  )
+  })
+
   return result
 }
 
