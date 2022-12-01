@@ -3,5 +3,9 @@
   "packageManager": "yarn@3.3.0",
   "devDependencies": {
     "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.10",
+    "lodash": "^4.17.21"
   }
 }
