@@ -44,5 +44,5 @@ const parsedInput = Deno
 const part1 = parsedInput.map(part1DecideResult).reduce((sum, current) => sum + current, 0);
 const part2 = parsedInput.map(part2DecideResult).reduce((sum, current) => sum + current, 0);
 
-console.log('Day 02 part 1:', part1, '-> correct:', part1 == 11906);
-console.log('Day 02 part 2:', part2, '-> correct:', part2 == 11186);
+console.log('Day 02 part 1:', part1);
+console.log('Day 02 part 2:', part2);
