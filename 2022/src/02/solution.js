@@ -1,8 +1,15 @@
+const add = (choice) =>
+  String.fromCharCode(choice.charCodeAt(0) + 1 > 67 ? 65 : choice.charCodeAt(0) + 1);
+
+const sub = (choice) =>
+  String.fromCharCode(choice.charCodeAt(0) - 1 < 65 ? 67 : choice.charCodeAt(0) - 1);
+
+const points = (choice) => +(choice.replace(/A/, 1).replace(/B/, 2).replace(/C/, 3));
+
 const decideOnABC = (they, we) => {
-  const points = +(we.replace(/A/, 1).replace(/B/, 2).replace(/C/, 3));
-  if (they == we) return points + 3;
-  if (add(we) == they) return points;
-  return points + 6;
+  if (they == we) return points(we) + 3;
+  if (add(we) == they) return points(we);
+  return points(we) + 6;
 };
 
 const part1DecideResult = (pair) => {
@@ -10,13 +17,6 @@ const part1DecideResult = (pair) => {
 
   return decideOnABC(pair[0], we);
 };
-
-const add = (
-  choice,
-) => (String.fromCharCode(choice.charCodeAt(0) + 1 > 67 ? 65 : choice.charCodeAt(0) + 1));
-const sub = (
-  choice,
-) => (String.fromCharCode(choice.charCodeAt(0) - 1 < 65 ? 67 : choice.charCodeAt(0) - 1));
 
 const part2XYZToChoice = (they, we) => {
   switch (we) {
@@ -43,5 +43,6 @@ const parsedInput = Deno
 
 const part1 = parsedInput.map(part1DecideResult).reduce((sum, current) => sum + current, 0);
 const part2 = parsedInput.map(part2DecideResult).reduce((sum, current) => sum + current, 0);
+
 console.log('Day 02 part 1:', part1, '-> correct:', part1 == 11906);
 console.log('Day 02 part 2:', part2, '-> correct:', part2 == 11186);
