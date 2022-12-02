@@ -6,7 +6,7 @@ const part1XYZToABC = a => {
   }
 }
 
-const part1ABCToRockPaperScissors = a => {
+const abcToChoice = a => {
   switch (a) {
     case 'A': return 'rock';
     case 'B': return 'paper';
@@ -14,36 +14,35 @@ const part1ABCToRockPaperScissors = a => {
   }
 }
 
-const part1ABCToScore = a => {
+const choicePoints = a => {
   switch(a) {
     case 'rock': return 1;
     case 'paper': return 2;
     case 'scissors': return 3;
   }
 }
-function decideResult(pair) {
-  const they = part1ABCToRockPaperScissors(pair[0])
-  const we = part1ABCToRockPaperScissors(part1XYZToABC(pair[1]))
-  const theyScore = part1ABCToScore(they)
-  const weScore = part1ABCToScore(we)
 
-  let result = 0;
+const roundToScore = (they, we) => {
   if (they == we) {
-    result = weScore + 3;
+    return choicePoints(we) + 3;
   } else if ((they == 'rock' && we == 'paper') || (they == 'paper' && we == 'scissors') || (they == 'scissors' && we == 'rock')) {
-    result = weScore + 6;
+    return choicePoints(we) + 6;
   } else {
-    result = weScore;
+    return choicePoints(we);
   }
-  return result
 }
 
-const results = Deno
+function part1DecideResult(pair) {
+  const they = abcToChoice(pair[0])
+  const we = abcToChoice(part1XYZToABC(pair[1]))
+  return roundToScore(they, we)
+}
+
+const parsedInput = Deno
   .readTextFileSync(Deno.args[0])
   .split(/\n/)
   .filter(pair => pair != "")
   .map(text => text.split(/ /))
-  .map(decideResult)
-  .reduce((sum, current) => sum + current, 0)
 
-console.log(results)
+console.log('Day 02 part 1:', parsedInput.map(part1DecideResult).reduce((sum, current) => sum + current, 0))
+// console.log('Day 02 part 2:', amounts.slice(0, 3).reduce((sum, current) => sum + current, 0))
