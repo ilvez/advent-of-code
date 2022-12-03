@@ -24,6 +24,12 @@ const input = Deno
   .split(/\n/)
   .filter((a) => a.length > 1);
 
+const solution = (group) =>
+  group.map((pack) => priority(findCommon(...pack))).reduce(
+    (sum, current) => sum + current,
+    0,
+  );
+
 const part1Input = input.map(
   (content) => [
     content.slice(0, content.length / 2),
@@ -31,12 +37,5 @@ const part1Input = input.map(
   ],
 );
 
-const part1 = part1Input.map((pack) => priority(findCommon(pack[0], pack[1]))).reduce(
-  (sum, current) => sum + current,
-  0,
-);
-console.log('Day 03 part 1:', part1);
-
-const part2 = groupByN(3, input).map((group) => findCommon(...group)).map((a) => priority(a))
-  .reduce((sum, current) => sum + current, 0);
-console.log('Day 03 part 2:', part2);
+console.log('Day 03 part 1:', solution(part1Input));
+console.log('Day 03 part 2:', solution(groupByN(3, input)));
