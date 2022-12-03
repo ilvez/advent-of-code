@@ -1,0 +1,9 @@
+{
+  "version": "2",
+  "remote": {
+    "https://cdn.skypack.dev/-/lodash-es@v4.17.21-rDGl8YjBUjcrrAbjNrmo/dist=es2019,mode=imports/optimized/lodash-es.js": "4a1b35d34b5e0d3ae68aa46ddaabb9700ccecb75b830974db7c46a271f10daa8",
+    "https://cdn.skypack.dev/lodash-es@^4.17.15": "7dc1d11c01e46bf442774791267f7ca93f6cc204451ac648f2560b0cd6c91524",
+    "https://f7oz6xcbryzf3ky2vfb3y7u7x3iq4rg2gyxfnq4s7nt54ofe6rpa.arweave.net/L92fXEGOMl2rGqlDvH6fvtEORNo2LlbDkvtn3jik9F4/lodash.ts": "120aac1bebaea6a82c386a031622a864ac2cda7dff49102ebd570fb809d1fa82",
+    "https://f7oz6xcbryzf3ky2vfb3y7u7x3iq4rg2gyxfnq4s7nt54ofe6rpa.arweave.net/L92fXEGOMl2rGqlDvH6fvtEORNo2LlbDkvtn3jik9F4/mod.ts": "84fe1f89b9ba2e1fd1d672ed34983b07d84cf85694e1dcbd507e7e095c3988f9"
+  }
+}
