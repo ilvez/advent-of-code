@@ -27,5 +27,5 @@ const partiallyContains = (input) => {
   }).length;
 };
 
-console.log('Day 03 part 1:', fullyContains(input));
-console.log('Day 03 part 1:', partiallyContains(input));
+console.log('Day 04 part 1:', fullyContains(input));
+console.log('Day 04 part 2:', partiallyContains(input));
