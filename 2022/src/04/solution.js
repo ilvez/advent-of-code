@@ -5,16 +5,27 @@ const input = Deno
   .split(/\n/)
   .filter((a) => a.length > 1);
 
-const part1Solution = (input) => {
-  return input.filter((line) => {
+const fullRange = (line) => {
     const assignments = line.split(',')
     const a = assignments[0].split('-')
     const b = assignments[1].split('-')
-    const aRange = ld.range(+a[0], +a[1] + 1)
-    const bRange = ld.range(+b[0], +b[1] + 1)
-    const intersection = ld.intersection(aRange, bRange)
-    return intersection.length == aRange.length || intersection.length == bRange.length
+    return [ld.range(+a[0], +a[1] + 1), ld.range(+b[0], +b[1] + 1)]
+}
+
+const fullyContains = (input) => {
+  return input.filter((line) => {
+    const range = fullRange(line)
+    const intersection = ld.intersection(range[0], range[1])
+    return intersection.length == range[0].length || intersection.length == range[1].length
   }).length
 }
 
-console.log('Day 03 part 1:', part1Solution(input));
+const partiallyContains = (input) => {
+  return input.filter((line) => {
+    const range = fullRange(line)
+    return ld.intersection(range[0], range[1]).length > 0
+  }).length
+}
+
+console.log('Day 03 part 1:', fullyContains(input));
+console.log('Day 03 part 1:', partiallyContains(input));
