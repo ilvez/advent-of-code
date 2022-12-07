@@ -41,11 +41,11 @@ function flattenObject(object, prefix = '', result = {}) {
 
 const fileTree = parseTree(input);
 
-const flattenedArray = Object.entries(flattenObject(fileTree));
+const flattenedArray = ld.sortBy(Object.entries(flattenObject(fileTree)).map((e) => e[1]));
 console.log(
   `Day 7 part 1:`,
-  flattenedArray.filter((entry) => entry[1] < 100000).map((entry) => entry[1]).reduce((
-    sum,
-    current,
-  ) => sum + current),
+  flattenedArray.filter((entry) => entry < 100000).reduce((sum, current) => sum + current),
 );
+
+const biggest = ld.last(flattenedArray);
+console.log(`Day 7 part 2:`, ld.filter(flattenedArray, (e) => e > biggest - 40000000)[0]);
