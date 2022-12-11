@@ -28,8 +28,19 @@ const newTailLocation = (head, tail) => {
   return ld.clone(tail);
 };
 
-const locations = [[0, 0]];
-let tail = [0, 0];
+const part1Locations = [[0, 0]];
+const part2Locations = [[0, 0]];
+const tails = [
+  [0, 0],
+  [0, 0],
+  [0, 0],
+  [0, 0],
+  [0, 0],
+  [0, 0],
+  [0, 0],
+  [0, 0],
+  [0, 0],
+];
 let head = [0, 0];
 
 for (const i in commands) {
@@ -48,8 +59,14 @@ for (const i in commands) {
         head = [head[0] + 1, head[1]];
         break;
     }
-    locations.push(newTailLocation(head, tail));
+    tails[0] = newTailLocation(head, tails[0]);
+    for (let i = 1; i <= 8; i += 1) {
+      tails[i] = newTailLocation(tails[i - 1], tails[i]);
+    }
+    part1Locations.push(ld.clone(tails[0]));
+    part2Locations.push(ld.clone(tails[8]));
   }
 }
 
-console.log('Day 09 part 1:', ld.uniqWith(locations, ld.isEqual).length);
+console.log('Day 09 part 1:', ld.uniqWith(part1Locations, ld.isEqual).length);
+console.log('Day 09 part 1:', ld.uniqWith(part2Locations, ld.isEqual).length);
