@@ -23,38 +23,44 @@ const parsePiles = (lines) => {
       if (lines[lineNum][linePos] != ' ') piles[i].push(lines[lineNum][linePos]);
     }
   }
-  for(const p in piles) piles[p] = ld.reverse(piles[p])
+  for (const p in piles) piles[p] = ld.reverse(piles[p]);
   return piles;
 };
 
 const executeCrateMover9000 = (lines, piles) => {
   for (let lineNum = maxStackSize(lines) + 2; lineNum < lines.length; lineNum += 1) {
     const parts = lines[lineNum].split(' ');
-    const amount = parts[1]
-    const from = parts[3] - 1
-    const to = parts[5] - 1
-    for(let i = 0; i < amount; i+=1) {
-      piles[to].push(piles[from].pop())
+    const amount = parts[1];
+    const from = parts[3] - 1;
+    const to = parts[5] - 1;
+    for (let i = 0; i < amount; i += 1) {
+      piles[to].push(piles[from].pop());
     }
   }
-  return piles
+  return piles;
 };
 
 const executeCrateMover9001 = (lines, piles) => {
   for (let lineNum = maxStackSize(lines) + 2; lineNum < lines.length; lineNum += 1) {
     const parts = lines[lineNum].split(' ');
-    const amount = parts[1]
-    const from = parts[3] - 1
-    const to = parts[5] - 1
+    const amount = parts[1];
+    const from = parts[3] - 1;
+    const to = parts[5] - 1;
 
-    const movedStack = []
-    for(let i = 0; i < amount; i+=1) {
-      movedStack.push(piles[from].pop())
+    const movedStack = [];
+    for (let i = 0; i < amount; i += 1) {
+      movedStack.push(piles[from].pop());
     }
-    piles[to] = ld.concat(piles[to], ld.reverse(movedStack))
+    piles[to] = ld.concat(piles[to], ld.reverse(movedStack));
   }
-  return piles
+  return piles;
 };
 
-console.log('Day 05 part 1:', executeCrateMover9000(lines, parsePiles(lines)).map(pile => pile.pop()).join(''))
-console.log('Day 05 part 2:', executeCrateMover9001(lines, parsePiles(lines)).map(pile => pile.pop()).join(''))
+console.log(
+  'Day 05 part 1:',
+  executeCrateMover9000(lines, parsePiles(lines)).map((pile) => pile.pop()).join(''),
+);
+console.log(
+  'Day 05 part 2:',
+  executeCrateMover9001(lines, parsePiles(lines)).map((pile) => pile.pop()).join(''),
+);
