@@ -1,34 +1,55 @@
+import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts';
+
 const commands = Deno
   .readTextFileSync(Deno.args[0])
   .split(/\n/)
-  .filter(line => !line == '')
-  .map(line => line.split(' '));
+  .filter((line) => !line == '')
+  .map((line) => line.split(' '));
 
-const updateHeadLocation = () => {
-  if headLocation[]
-  locations.push(tailLocation)
-}
+const newTailLocation = (head, tail) => {
+  const yDiff = head[0] - tail[0];
+  const xDiff = head[1] - tail[1];
+  if (yDiff < -1) {
+    tail[0] -= 1;
+    if (Math.abs(xDiff) == 1) tail[1] = head[1];
+  } else if (yDiff > 1) {
+    tail[0] += 1;
+    if (Math.abs(xDiff) == 1) tail[1] = head[1];
+  }
 
-const locations = [[0,0]]
-let tailLocation = [0,0]
-let headLocation = [0,0]
+  if (xDiff < -1) {
+    tail[1] -= 1;
+    if (Math.abs(yDiff) == 1) tail[0] = head[0];
+  } else if (xDiff > 1) {
+    tail[1] += 1;
+    if (Math.abs(yDiff) == 1) tail[0] = head[0];
+  }
 
-for(const i in commands) {
-  for(let step = 0; step < commands[i][1]; step += 1) {
-    switch(commands[i][0]) {
+  return ld.clone(tail);
+};
+
+const locations = [[0, 0]];
+let tail = [0, 0];
+let head = [0, 0];
+
+for (const i in commands) {
+  for (let step = 0; step < commands[i][1]; step += 1) {
+    switch (commands[i][0]) {
       case 'R':
-        headLocation = [headLocation[0], headLocation[1] + 1]
+        head = [head[0], head[1] + 1];
         break;
       case 'U':
-        headLocation = [headLocation[0] - 1, headLocation[1]]
+        head = [head[0] - 1, head[1]];
         break;
       case 'L':
-        headLocation = [headLocation[0], headLocation[1] - 1]
+        head = [head[0], head[1] - 1];
         break;
       case 'D':
-        headLocation = [headLocation[0] + 1, headLocation[1]]
+        head = [head[0] + 1, head[1]];
         break;
     }
-    updateHeadLocation()
+    locations.push(newTailLocation(head, tail));
   }
 }
+
+console.log('Day 09 part 1:', ld.uniqWith(locations, ld.isEqual).length);
