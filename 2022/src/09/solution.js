@@ -30,7 +30,8 @@ const newTailLocation = (head, tail) => {
 
 const part1Locations = [[0, 0]];
 const part2Locations = [[0, 0]];
-const tails = [
+const rope = [
+  [0, 0],
   [0, 0],
   [0, 0],
   [0, 0],
@@ -41,30 +42,28 @@ const tails = [
   [0, 0],
   [0, 0],
 ];
-let head = [0, 0];
 
 for (const i in commands) {
   for (let step = 0; step < commands[i][1]; step += 1) {
     switch (commands[i][0]) {
       case 'R':
-        head = [head[0], head[1] + 1];
+        rope[0] = [rope[0][0], rope[0][1] + 1];
         break;
       case 'U':
-        head = [head[0] - 1, head[1]];
+        rope[0] = [rope[0][0] - 1, rope[0][1]];
         break;
       case 'L':
-        head = [head[0], head[1] - 1];
+        rope[0] = [rope[0][0], rope[0][1] - 1];
         break;
       case 'D':
-        head = [head[0] + 1, head[1]];
+        rope[0] = [rope[0][0] + 1, rope[0][1]];
         break;
     }
-    tails[0] = newTailLocation(head, tails[0]);
-    for (let i = 1; i <= 8; i += 1) {
-      tails[i] = newTailLocation(tails[i - 1], tails[i]);
+    for (let i = 0; i < 9; i += 1) {
+      rope[i + 1] = newTailLocation(rope[i], rope[i + 1]);
     }
-    part1Locations.push(ld.clone(tails[0]));
-    part2Locations.push(ld.clone(tails[8]));
+    part1Locations.push(ld.clone(rope[1]));
+    part2Locations.push(ld.clone(rope[9]));
   }
 }
 
