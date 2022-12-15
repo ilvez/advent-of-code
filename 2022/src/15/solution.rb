@@ -44,9 +44,7 @@ class Coverage
   def slice_on_line(y)
     diff = (y - sensor.y).abs
     line_length = distance - diff
-    ((sensor.x - line_length)..(sensor.x + line_length))
-      .map { _1 }
-      .filter { |x_pos| self != Point.new(x_pos, y) }
+    ((sensor.x - line_length)..(sensor.x + line_length)).map { _1 }
   end
 
   private
