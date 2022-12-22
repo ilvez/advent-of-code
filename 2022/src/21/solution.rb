@@ -87,21 +87,18 @@ root_b = @monkies[root.b]
 def humn_value(monkey, value)
   a = @monkies[monkey.a]
   b = @monkies[monkey.b]
-
   if a.humn?
-    a_value(find_value(b), value, monkey)
+    other_value(find_value(b), value, monkey)
   elsif b.humn?
     b_value(find_value(a), value, monkey)
-  end
-
-  if contains_humn?(a)
-    humn_value(a, a_value(find_value(b), value, monkey))
+  elsif contains_humn?(a)
+    humn_value(a, other_value(find_value(b), value, monkey))
   elsif contains_humn?(b)
     humn_value(b, b_value(find_value(a), value, monkey))
   end
 end
 
-def a_value(b_value, value, monkey)
+def other_value(b_value, value, monkey)
   value.public_send(monkey.humn_operation, b_value)
 end
 
@@ -112,15 +109,16 @@ def b_value(a_value, value, monkey)
   when :-
     a_value - value
   else
-    value.public_send(monkey.humn_operation, a_value)
+    other_value(a_value, value, monkey)
   end
 end
 
 humn_value = if contains_humn?(root_a)
-               humn_value(root_a, find_value(root_b))
-             else
-               humn_value(root_b, find_value(root_a))
-             end
+          humn_value(root_a, find_value(root_b))
+        else
+          humn_value(root_b, find_value(root_a))
+        end
 
 puts "Day 22 part 1: #{find_value(root)}"
+
 puts "Day 22 part 2: #{humn_value}"
