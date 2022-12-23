@@ -49,12 +49,6 @@ class Monkey
   end
 end
 
-@monkies = File.readlines(ARGV[0], chomp: true)
-               .to_h do |line|
-                 monkey = Monkey.new(line)
-                 [monkey.name, monkey]
-               end
-
 def find_value(monkey)
   if monkey.number?
     monkey.number
@@ -103,15 +97,21 @@ def b_value(a_value, value, monkey)
   end
 end
 
+@monkies = File.readlines(ARGV[0], chomp: true)
+               .to_h do |line|
+                 monkey = Monkey.new(line)
+                 [monkey.name, monkey]
+               end
+
 root = @monkies['root']
 root_a = @monkies[root.a]
 root_b = @monkies[root.b]
 
 humn_value = if contains_humn?(root_a)
-          humn_value(root_a, find_value(root_b))
-        else
-          humn_value(root_b, find_value(root_a))
-        end
+               humn_value(root_a, find_value(root_b))
+             else
+               humn_value(root_b, find_value(root_a))
+             end
 
 puts "Day 22 part 1: #{find_value(root)}"
 
