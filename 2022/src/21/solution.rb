@@ -1,10 +1,16 @@
 require 'amazing_print'
 class Monkey
-  attr_reader :name
+  attr_reader :name, :a, :b, :operation
 
   def initialize(line)
     @name = line.split(': ')[0]
     @calculation = line.split(': ')[1]
+
+    unless number?
+      @a = @calculation.split[0]
+      @operation = @calculation.split[1].to_sym
+      @b = @calculation.split[2]
+    end
   end
 
   def to_s
@@ -23,14 +29,6 @@ class Monkey
     Integer(@calculation)
   end
 
-  def a
-    @calculation.split[0]
-  end
-
-  def operation
-    @calculation.split[1].to_sym
-  end
-
   def humn_operation
     case operation
     when :+
@@ -44,10 +42,6 @@ class Monkey
     else
       raise ArgumentError
     end
-  end
-
-  def b
-    @calculation.split[2]
   end
 
   def humn?
@@ -80,10 +74,6 @@ def contains_humn?(monkey)
   a.humn? || b.humn? || contains_humn?(a) || contains_humn?(b)
 end
 
-root = @monkies['root']
-root_a = @monkies[root.a]
-root_b = @monkies[root.b]
-
 def humn_value(monkey, value)
   a = @monkies[monkey.a]
   b = @monkies[monkey.b]
@@ -112,6 +102,10 @@ def b_value(a_value, value, monkey)
     other_value(a_value, value, monkey)
   end
 end
+
+root = @monkies['root']
+root_a = @monkies[root.a]
+root_b = @monkies[root.b]
 
 humn_value = if contains_humn?(root_a)
           humn_value(root_a, find_value(root_b))
