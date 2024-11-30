@@ -77,6 +77,13 @@ defmodule Day02Test do
   end
 
   test "part 2" do
-    # test_input = "test/resources/day02/test_input"
+    maximums = Day02.find_maximums([%{blue: 4, red: 4}, %{blue: 6, green: 2, red: 1}, %{green: 2}])
+    assert maximums == [6, 2, 4]
+
+    pow = Day02.pow(maximums)
+    assert pow == 48
+
+    part2 = Day02.part2("test/resources/day02/test_input")
+    assert part2 == 2286
   end
 end

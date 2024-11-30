@@ -1,7 +1,7 @@
 defmodule Day02 do
   def run do
     IO.puts("Day 02, part 1: #{part1("test/resources/day02/input")}")
-    # IO.puts("Day 02, part 2: #{part2("test/resources/day02/input")}")
+    IO.puts("Day 02, part 2: #{part2("test/resources/day02/input")}")
   end
 
   def part1(file) do
@@ -10,6 +10,27 @@ defmodule Day02 do
     |> find_possible_games()
     |> Enum.map(&(&1.game))
     |> Enum.sum()
+  end
+
+  def part2(file) do
+    lines(file)
+    |> parse_games()
+    |> Enum.map(&(&1.sets))
+    |> Enum.map(&find_maximums/1)
+    |> Enum.map(&pow/1)
+    |> Enum.sum()
+  end
+
+  def find_maximums(sets) do
+    # IO.puts(sets)
+    sets
+    |> Enum.flat_map(&Map.to_list/1)
+    |> Enum.group_by(fn {key, _value} -> key end, fn {_key, value} -> value end)
+    |> Enum.map(fn {_, counts} -> Enum.max(counts) end)
+  end
+
+  def pow(maximums) do
+    Enum.reduce(maximums, 1, &Kernel.*/2)
   end
 
   def find_possible_games(games) do
