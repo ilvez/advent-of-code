@@ -14,15 +14,16 @@ defmodule Day01Test do
   test "part 2" do
     test_input = "test/resources/day01/test_input2"
     lines = Day01.lines(test_input)
+
     assert lines == [
-      "two1nine",
-      "eightwothree",
-      "abcone2threexyz",
-      "xtwone3four",
-      "4nineeightseven2",
-      "zoneight234",
-      "7pqrstsixteen"
-    ]
+             "two1nine",
+             "eightwothree",
+             "abcone2threexyz",
+             "xtwone3four",
+             "4nineeightseven2",
+             "zoneight234",
+             "7pqrstsixteen"
+           ]
 
     assert Day01.word_replace("two1nine") == "219"
     assert Day01.word_replace("eightwothree") == "823"

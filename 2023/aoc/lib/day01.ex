@@ -35,12 +35,12 @@ defmodule Day01 do
 
   def lines(file) do
     File.stream!(file)
-      |> Stream.map(&String.trim/1)
-      |> Enum.to_list()
-      |> List.flatten()
+    |> Stream.map(&String.trim/1)
+    |> Enum.to_list()
+    |> List.flatten()
   end
 
-  defp reduce_string(string) when byte_size(string) <1 do
+  defp reduce_string(string) when byte_size(string) < 1 do
     "00"
   end
 
@@ -55,16 +55,16 @@ defmodule Day01 do
   end
 
   def parse_both(""), do: []
-  def parse_both(<<c>>   <> rest) when c in ?0..?9, do: [c - ?0 | parse_both(rest)]
-  def parse_both("zero"  <> rest), do: [0 | parse_both("o" <> rest)]
-  def parse_both("one"   <> rest), do: [1 | parse_both("e" <> rest)]
-  def parse_both("two"   <> rest), do: [2 | parse_both("o" <> rest)]
+  def parse_both(<<c>> <> rest) when c in ?0..?9, do: [c - ?0 | parse_both(rest)]
+  def parse_both("zero" <> rest), do: [0 | parse_both("o" <> rest)]
+  def parse_both("one" <> rest), do: [1 | parse_both("e" <> rest)]
+  def parse_both("two" <> rest), do: [2 | parse_both("o" <> rest)]
   def parse_both("three" <> rest), do: [3 | parse_both("e" <> rest)]
-  def parse_both("four"  <> rest), do: [4 | parse_both("r" <> rest)]
-  def parse_both("five"  <> rest), do: [5 | parse_both("e" <> rest)]
-  def parse_both("six"   <> rest), do: [6 | parse_both("x" <> rest)]
+  def parse_both("four" <> rest), do: [4 | parse_both("r" <> rest)]
+  def parse_both("five" <> rest), do: [5 | parse_both("e" <> rest)]
+  def parse_both("six" <> rest), do: [6 | parse_both("x" <> rest)]
   def parse_both("seven" <> rest), do: [7 | parse_both("n" <> rest)]
   def parse_both("eight" <> rest), do: [8 | parse_both("t" <> rest)]
-  def parse_both("nine"  <> rest), do: [9 | parse_both("e" <> rest)]
-  def parse_both(<<_>>   <> rest), do: parse_both(rest)
+  def parse_both("nine" <> rest), do: [9 | parse_both("e" <> rest)]
+  def parse_both(<<_>> <> rest), do: parse_both(rest)
 end
