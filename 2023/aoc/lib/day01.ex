@@ -54,6 +54,9 @@ defmodule Day01 do
     |> Enum.join()
   end
 
+  # Stole the solution from: https://www.reddit.com/r/adventofcode/comments/1883ibu/comment/kbl0jhs/
+  # My own solution didn't work with including the last character in the pattern match. Was too lazy to implement
+  # it myself, after understanding the issue.
   def parse_both(""), do: []
   def parse_both(<<c>> <> rest) when c in ?0..?9, do: [c - ?0 | parse_both(rest)]
   def parse_both("zero" <> rest), do: [0 | parse_both("o" <> rest)]
