@@ -32,4 +32,9 @@ defmodule Day01Test do
 
     assert Day01.part1(test_file) == 11
   end
+
+  test "part 2" do
+    test_file = "test/resources/day01/test_input"
+    assert Day01.part2(test_file) == 31
+  end
 end

@@ -1,7 +1,7 @@
 defmodule Day01 do
   def run do
     IO.puts("Day 01, part 1: #{part1("test/resources/day01/input")}")
-    # IO.puts("Day 01, part 2: #{part2("test/resources/day02/input")}")
+    IO.puts("Day 01, part 2: #{part2("test/resources/day01/input")}")
   end
 
   def part1(file) do
@@ -11,6 +11,18 @@ defmodule Day01 do
     |> Enum.zip()
     |> Enum.map(fn {a, b} -> Kernel.abs(a - b) end)
     |> Enum.sum()
+  end
+
+  def part2(file) do
+    [locations, popularities] = lines(file) |> pairs()
+
+    Enum.reduce(locations, 0, fn location, acc ->
+      count =
+        Enum.filter(popularities, fn popularity -> popularity == location end)
+        |> Enum.count()
+
+      acc + location * count
+    end)
   end
 
   def pairs(lines) do
