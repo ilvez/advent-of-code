@@ -59,7 +59,6 @@ defmodule Day01 do
   # it myself, after understanding the issue.
   def parse_both(""), do: []
   def parse_both(<<c>> <> rest) when c in ?0..?9, do: [c - ?0 | parse_both(rest)]
-  def parse_both("zero" <> rest), do: [0 | parse_both("o" <> rest)]
   def parse_both("one" <> rest), do: [1 | parse_both("e" <> rest)]
   def parse_both("two" <> rest), do: [2 | parse_both("o" <> rest)]
   def parse_both("three" <> rest), do: [3 | parse_both("e" <> rest)]

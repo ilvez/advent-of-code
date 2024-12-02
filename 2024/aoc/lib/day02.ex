@@ -1,7 +1,7 @@
 defmodule Day02 do
   def run do
-    IO.puts("Day 01, part 1: #{part1("test/resources/day02/input")}")
-    IO.puts("Day 01, part 2: #{part2("test/resources/day02/input")}")
+    IO.puts("Day 02, part 1: #{part1("test/resources/day02/input")}")
+    IO.puts("Day 02, part 2: #{part2("test/resources/day02/input")}")
   end
 
   def part1(file) do

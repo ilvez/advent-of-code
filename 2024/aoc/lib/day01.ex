@@ -9,7 +9,7 @@ defmodule Day01 do
     |> pairs()
     |> sorted()
     |> Enum.zip()
-    |> Enum.map(fn {a, b} -> Kernel.abs(a - b) end)
+    |> Enum.map(fn {a, b} -> abs(a - b) end)
     |> Enum.sum()
   end
 
