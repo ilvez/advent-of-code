@@ -1,7 +1,7 @@
 defmodule Day02 do
   def run do
     IO.puts("Day 01, part 1: #{part1("test/resources/day02/input")}")
-    # IO.puts("Day 01, part 2: #{part2("test/resources/day01/input")}")
+    IO.puts("Day 01, part 2: #{part2("test/resources/day02/input")}")
   end
 
   def part1(file) do
@@ -9,6 +9,20 @@ defmodule Day02 do
     |> levels()
     |> Enum.filter(&safe?/1)
     |> Enum.count()
+  end
+
+  def part2(file) do
+    lines(file)
+    |> levels()
+    |> Enum.filter(&part2_safe?/1)
+    |> Enum.count()
+  end
+
+  def part2_safe?(level) do
+    case safe?(level) do
+      true -> true
+      false -> safe_one_removed?(level)
+    end
   end
 
   def lines(file) do
@@ -22,6 +36,20 @@ defmodule Day02 do
     lines
     |> Enum.map(&String.split/1)
     |> Enum.map(fn sublist -> Enum.map(sublist, &String.to_integer/1) end)
+  end
+
+  def safe_one_removed?(level) do
+    levels_with_one_missing(level) |> Enum.any?(&safe?/1)
+  end
+
+  def levels_with_one_missing(level) do
+    Enum.with_index(level) |> Enum.map(fn {_v, i} -> reject(level, i) end)
+  end
+
+  def reject(list, index) do
+    Enum.with_index(list)
+    |> Enum.reject(fn {_, i} -> index == i end)
+    |> Enum.map(fn {value, _} -> value end)
   end
 
   def safe?(level) do

@@ -38,7 +38,23 @@ defmodule Day02Test do
   end
 
   test "part 2" do
-    # test_file = "test/resources/day01/test_input"
-    # assert Day02.part2(test_file) == 31
+    assert Day02.reject([1, 2, 3], 1) == [1, 3]
+
+    assert Day02.levels_with_one_missing([1, 2, 3, 4]) == [
+             [2, 3, 4],
+             [1, 3, 4],
+             [1, 2, 4],
+             [1, 2, 3]
+           ]
+
+    assert Day02.safe_one_removed?([7, 6, 4, 2, 1]) == true
+    assert Day02.safe_one_removed?([1, 2, 7, 8, 9]) == false
+    assert Day02.safe_one_removed?([9, 7, 6, 2, 1]) == false
+    assert Day02.safe_one_removed?([1, 3, 2, 4, 5]) == true
+    assert Day02.safe_one_removed?([8, 6, 4, 4, 1]) == true
+    assert Day02.safe_one_removed?([1, 3, 6, 7, 9]) == true
+
+    test_file = "test/resources/day02/test_input"
+    assert Day02.part2(test_file) == 4
   end
 end
