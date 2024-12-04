@@ -74,6 +74,9 @@ defmodule Day04Test do
   end
 
   test "part2" do
-    assert Day04.part2("test/resources/day04/test_input") == []
+    test_file = "test/resources/day04/test_input"
+    lines = Day04.lines(test_file)
+    indexed_lines = Day04.indexed_lines(lines)
+    assert Day04.find_mas(indexed_lines) == 9
   end
 end
