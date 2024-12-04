@@ -24,6 +24,7 @@ defmodule Day04Test do
            ]
 
     vertical_lines = Day04.vertical_lines(lines)
+
     assert vertical_lines == [
              ["M", "M", "A", "M", "X", "X", "S", "S", "M", "M"],
              ["M", "S", "M", "S", "M", "X", "M", "A", "A", "X"],
@@ -36,31 +37,39 @@ defmodule Day04Test do
              ["S", "S", "M", "M", "M", "M", "S", "A", "M", "S"],
              ["M", "A", "M", "X", "M", "A", "S", "A", "M", "X"]
            ]
-    assert Day04.diagonals_from(lines, 0, 2) == [["M", "M", "X", "S", "X", "A", "S", "A"], ["M", "S", "A"]]
-    assert Day04.diagonals_from(lines, 2, 0) == [["A", "S", "A", "M", "S", "A", "M", "A"], ["A"]]
+
+    assert Day04.diagonals_from(lines, 0, 2) == ["M", "M", "X", "S", "X", "A", "S", "A"]
+    assert Day04.diagonals_from(lines, 2, 0) == ["A", "S", "A", "M", "S", "A", "M", "A"]
+
+    assert Day04.reverse_lines(lines) == [
+             ["M", "S", "A", "M", "X", "X", "S", "M", "M", "M"],
+             ["A", "S", "M", "S", "M", "X", "M", "A", "S", "M"],
+             ["M", "M", "A", "A", "M", "X", "S", "X", "M", "A"],
+             ["X", "M", "S", "M", "S", "A", "M", "A", "S", "M"],
+             ["M", "M", "A", "X", "M", "A", "S", "A", "M", "X"],
+             ["A", "M", "A", "X", "X", "M", "M", "A", "X", "X"],
+             ["S", "S", "X", "S", "A", "S", "M", "S", "M", "S"],
+             ["A", "A", "A", "S", "A", "M", "A", "X", "A", "S"],
+             ["M", "M", "M", "M", "X", "M", "M", "M", "A", "M"],
+             ["X", "S", "A", "M", "X", "A", "X", "M", "X", "M"]
+           ]
+
     assert Day04.diagonal_lines(lines) == [
-              ["M", "S", "X", "M", "A", "X", "S", "A", "M", "X"],
-              ["M", "A", "S", "A", "M", "X", "X", "A", "M"],
-              ["M", "M", "X", "S", "X", "A", "S", "A"],
-              ["S", "X", "M", "M", "A", "M", "S"],
-              ["S", "A", "M", "M"],
-              ["X", "M", "A", "S", "M", "A"],
-              ["X", "M", "X", "S", "X"],
-              ["X", "S", "A", "M", "M"],
-              ["X", "X", "S", "A", "M", "X"],
-              ["M", "M", "M", "X"],
-              ["M", "M", "X", "M", "A", "X", "S"],
-              ["A", "S", "M", "A", "S", "A", "M", "S"],
-              ["S", "M", "A", "S", "A", "M", "S", "A", "M"],
-              ["M", "S", "A", "M", "M", "M", "M", "X", "A", "M"],
-              ["M", "M", "A", "S", "M", "A", "S", "M", "S"],
-              ["A", "S", "A", "M", "S", "A", "M", "A"],
-              ["M", "M", "A", "M", "M", "X", "M"],
-              ["X", "X", "S", "A", "M", "X"],
-              ["X", "M", "X", "M", "A"],
-              ["S", "A", "M", "X"]
-            ]
+             ["M", "S", "X", "M", "A", "X", "S", "A", "M", "X"],
+             ["M", "A", "S", "A", "M", "X", "X", "A", "M"],
+             ["M", "M", "X", "S", "X", "A", "S", "A"],
+             ["S", "X", "M", "M", "A", "M", "S"],
+             ["X", "M", "A", "S", "M", "A"],
+             ["X", "S", "A", "M", "M"],
+             ["M", "M", "M", "X"],
+             ["M", "M", "A", "S", "M", "A", "S", "M", "S"],
+             ["A", "S", "A", "M", "S", "A", "M", "A"],
+             ["M", "M", "A", "M", "M", "X", "M"],
+             ["X", "X", "S", "A", "M", "X"],
+             ["X", "M", "X", "M", "A"],
+             ["S", "A", "M", "X"]
+           ]
+
     assert Day04.part1(test_file) == 18
-    assert Day04.diagonal_lines(vertical_lines) == []
   end
 end
