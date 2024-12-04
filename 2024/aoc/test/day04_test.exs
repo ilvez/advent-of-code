@@ -72,4 +72,8 @@ defmodule Day04Test do
 
     assert Day04.part1(test_file) == 18
   end
+
+  test "part2" do
+    assert Day04.part2("test/resources/day04/test_input") == []
+  end
 end

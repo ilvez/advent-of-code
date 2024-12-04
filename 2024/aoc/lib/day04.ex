@@ -13,6 +13,12 @@ defmodule Day04 do
     |> Enum.sum()
   end
 
+  def part2(file) do
+    lines = lines(file)
+
+    diagonal_lines(lines, true) ++ diagonal_lines(reverse_lines(lines), true)
+  end
+
   def vertical_lines(lines) do
     lines
     |> Enum.zip()
@@ -23,22 +29,26 @@ defmodule Day04 do
     lines |> Enum.map(&Enum.reverse/1)
   end
 
-  def diagonal_lines(lines) do
+  def diagonal_lines(lines, locations \\ false) do
     rows = length(lines)
     cols = length(Enum.at(lines, 0))
-    col_diags = for col <- 0..(cols - 1), do: diagonals_from(lines, 0, col)
-    row_diags = for row <- 1..(rows - 1), do: diagonals_from(lines, row, 0)
+    col_diags = for col <- 0..(cols - 1), do: diagonals_from(lines, 0, col, locations)
+    row_diags = for row <- 1..(rows - 1), do: diagonals_from(lines, row, 0, locations)
 
     (col_diags ++ row_diags) |> Enum.filter(&(length(&1) >= 4))
   end
 
-  def diagonals_from(lines, start_row, start_col) do
+  def diagonals_from(lines, start_row, start_col, locations \\ false) do
     Enum.reduce_while(0..length(lines), [], fn offset, acc ->
       current_row = start_row + offset
       current_col = start_col + offset
 
       if current_row < length(lines) && current_col < length(Enum.at(lines, current_row, [])) do
-        {:cont, acc ++ [Enum.at(Enum.at(lines, current_row), current_col)]}
+        if locations do
+          {:cont, acc ++ [{Enum.at(Enum.at(lines, current_row), current_col), {current_row, current_col}}]}
+        else
+          {:cont, acc ++ [Enum.at(Enum.at(lines, current_row), current_col)]}
+        end
       else
         {:halt, acc}
       end
