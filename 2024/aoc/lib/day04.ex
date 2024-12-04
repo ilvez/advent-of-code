@@ -31,7 +31,6 @@ defmodule Day04 do
         (a == "M" && b == "A" && c == "S") || (a == "S" && b == "A" && c == "M")
       end)
     end)
-    |> Enum.filter(fn mas -> length(mas) > 0 end)
     |> Enum.map(fn mas ->
       Enum.map(mas, fn submas -> Enum.filter(submas, fn sss -> Enum.at(sss, 0) == "A" end) end)
     end)
