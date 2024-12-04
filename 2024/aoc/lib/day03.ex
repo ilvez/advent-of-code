@@ -18,7 +18,6 @@ defmodule Day03 do
     |> multiply()
   end
 
-
   def memory(file) do
     File.stream!(file)
     |> Stream.map(&String.trim/1)
@@ -30,14 +29,15 @@ defmodule Day03 do
   end
 
   def selected_arguments(memory) do
-    {:ok, memory} = Regex.scan(~r"mul\((\d+),(\d+)\)|don't\(\)|do\(\)", memory)
-    |> Enum.reduce(%{on: true, memory: []}, fn
-      ["don't()"], acc -> %{on: false, memory: acc.memory}
-      ["do()"], acc -> %{on: true, memory: acc.memory}
-      [_, a, b], %{on: true} = acc -> %{on: true, memory: acc.memory ++ [[a, b]]}
-      _, acc -> acc
-    end)
-    |> Map.fetch(:memory)
+    {:ok, memory} =
+      Regex.scan(~r"mul\((\d+),(\d+)\)|don't\(\)|do\(\)", memory)
+      |> Enum.reduce(%{on: true, memory: []}, fn
+        ["don't()"], acc -> %{on: false, memory: acc.memory}
+        ["do()"], acc -> %{on: true, memory: acc.memory}
+        [_, a, b], %{on: true} = acc -> %{on: true, memory: acc.memory ++ [[a, b]]}
+        _, acc -> acc
+      end)
+      |> Map.fetch(:memory)
 
     memory
   end
